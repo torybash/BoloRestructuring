@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Building : Actor
+namespace Bolo
 {
+	public class Building : Actor
+	{
 
 
+	}
 }

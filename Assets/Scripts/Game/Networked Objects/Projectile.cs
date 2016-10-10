@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Projectile : NetworkSpawnable
+namespace Bolo
 {
+	public class Projectile : NetworkSpawnable
+	{
 
 
+	}
 }

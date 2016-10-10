@@ -2,10 +2,13 @@
 using UnityEngine.Networking;
 using System.Collections;
 
-public abstract class NetworkSpawnable : NetworkBehaviour
+namespace Bolo
 {
+	public abstract class NetworkSpawnable : NetworkBehaviour
+	{
 
-	//public override void OnStartClient() {
-	//	base.OnStartClient();
-	//}
+		//public override void OnStartClient() {
+		//	base.OnStartClient();
+		//}
+	}
 }

@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(CanvasGroup))]
-public class UIPanel : MonoBehaviour
+namespace Bolo.UI
 {
-
-	private CanvasGroup _canvasGroup;
-
-	private CanvasGroup CanvasGroup
+	[RequireComponent(typeof(CanvasGroup))]
+	public class UIPanel : MonoBehaviour
 	{
-		get
+
+		private CanvasGroup _canvasGroup;
+
+		private CanvasGroup CanvasGroup
 		{
-			if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
-			return _canvasGroup;
+			get
+			{
+				if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
+				return _canvasGroup;
+			}
 		}
-	}
 
-	public void Enable(bool enable)
-	{
-		gameObject.SetActive(enable);
+		public void Enable(bool enable)
+		{
+			gameObject.SetActive(enable);
+		}
 	}
 }

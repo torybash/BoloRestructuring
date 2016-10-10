@@ -2,41 +2,43 @@
 using UnityEngine.Events;
 using System.Collections.Generic;
 
-public class EventManager
+namespace Bolo.Util
 {
-
-	private Dictionary<string, UnityEvent> _eventDictionary = new Dictionary<string, UnityEvent>();
-
-	public void StartListening(string eventName, UnityAction listener)
+	public class EventManager
 	{
-		UnityEvent thisEvent = null;
-		if (_eventDictionary.TryGetValue(eventName, out thisEvent))
-		{
-			thisEvent.AddListener(listener);
-		}
-		else
-		{
-			thisEvent = new UnityEvent();
-			thisEvent.AddListener(listener);
-			_eventDictionary.Add(eventName, thisEvent);
-		}
-	}
+		private Dictionary<string, UnityEvent> _eventDictionary = new Dictionary<string, UnityEvent>();
 
-	public void StopListening(string eventName, UnityAction listener)
-	{
-		UnityEvent thisEvent = null;
-		if (_eventDictionary.TryGetValue(eventName, out thisEvent))
+		public void StartListening(string eventName, UnityAction listener)
 		{
-			thisEvent.RemoveListener(listener);
+			UnityEvent thisEvent = null;
+			if (_eventDictionary.TryGetValue(eventName, out thisEvent))
+			{
+				thisEvent.AddListener(listener);
+			}
+			else
+			{
+				thisEvent = new UnityEvent();
+				thisEvent.AddListener(listener);
+				_eventDictionary.Add(eventName, thisEvent);
+			}
 		}
-	}
 
-	public void TriggerEvent(string eventName)
-	{
-		UnityEvent thisEvent = null;
-		if (_eventDictionary.TryGetValue(eventName, out thisEvent))
+		public void StopListening(string eventName, UnityAction listener)
 		{
-			thisEvent.Invoke();
+			UnityEvent thisEvent = null;
+			if (_eventDictionary.TryGetValue(eventName, out thisEvent))
+			{
+				thisEvent.RemoveListener(listener);
+			}
+		}
+
+		public void TriggerEvent(string eventName)
+		{
+			UnityEvent thisEvent = null;
+			if (_eventDictionary.TryGetValue(eventName, out thisEvent))
+			{
+				thisEvent.Invoke();
+			}
 		}
 	}
 }

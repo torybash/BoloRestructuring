@@ -2,21 +2,23 @@
 using UnityEditor;
 using System.Collections;
 
-[CustomEditor(typeof(NetManagerPrefabs))]
-public class NetManagerPrefabsEditor : Editor {
+namespace Bolo.Net
+{
+	[CustomEditor(typeof(NetManagerPrefabs))]
+	public class NetManagerPrefabsEditor : Editor {
 
-	private NetManagerPrefabs Target { get { return (NetManagerPrefabs)target; } }
+		private NetManagerPrefabs Target { get { return (NetManagerPrefabs)target; } }
 
-	public override void OnInspectorGUI() {
-		DrawDefaultInspector();
+		public override void OnInspectorGUI() {
+			DrawDefaultInspector();
 
-		if (GUILayout.Button("Add prefab references")) {
-			AddPrefabReferences();
+			if (GUILayout.Button("Add prefab references")) {
+				AddPrefabReferences();
+			}
 		}
-	}
 
-
-	private void AddPrefabReferences() {
-		throw new System.NotImplementedException("TODO");
+		private void AddPrefabReferences() {
+			throw new System.NotImplementedException("TODO");
+		}
 	}
 }

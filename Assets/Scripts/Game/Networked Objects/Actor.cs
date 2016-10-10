@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Actor : NetworkSpawnable
+namespace Bolo
 {
+	public abstract class Actor : NetworkSpawnable
+	{
 
 
+	}
 }

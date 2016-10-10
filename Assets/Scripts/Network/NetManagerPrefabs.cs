@@ -4,41 +4,44 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(NetworkManager))]
-public class NetManagerPrefabs : MonoBehaviour
+namespace Bolo.Net
 {
-
-	private NetworkManager _manager;
-
-	private Dictionary<string, GameObject> _prefabDict;
-
-	private NetworkManager manager
+	[RequireComponent(typeof(NetworkManager))]
+	public class NetManagerPrefabs : MonoBehaviour
 	{
-		get
-		{
-			if (_manager == null) _manager = GetComponent<NetworkManager>();
-			return _manager;
-		}
-	}
 
-	void Awake()
-	{
-		_prefabDict = new Dictionary<string, GameObject>();
-		foreach (var item in manager.spawnPrefabs)
-		{
-			_prefabDict.Add(item.name, item);
-		}
-	}
+		private NetworkManager _manager;
 
-	public GameObject Create(string key)
-	{
-		GameObject prefab = null;
-		if (!_prefabDict.TryGetValue(key, out prefab))
+		private Dictionary<string, GameObject> _prefabDict;
+
+		private NetworkManager manager
 		{
-			Debug.LogError("Spawnable with key " + key + " does not exists!");
-			return null;
+			get
+			{
+				if (_manager == null) _manager = GetComponent<NetworkManager>();
+				return _manager;
+			}
 		}
-		var instance = GameObject.Instantiate(prefab);
-		return instance;
+
+		void Awake()
+		{
+			_prefabDict = new Dictionary<string, GameObject>();
+			foreach (var item in manager.spawnPrefabs)
+			{
+				_prefabDict.Add(item.name, item);
+			}
+		}
+
+		public GameObject Create(string key)
+		{
+			GameObject prefab = null;
+			if (!_prefabDict.TryGetValue(key, out prefab))
+			{
+				Debug.LogError("Spawnable with key " + key + " does not exists!");
+				return null;
+			}
+			var instance = GameObject.Instantiate(prefab);
+			return instance;
+		}
 	}
 }
