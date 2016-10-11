@@ -19,7 +19,7 @@ namespace Bolo.Map
 
 		public MapInfo GetRandomMapInfo()
 		{
-			var mapInfo = new MapInfo();
+			var mapInfo = new MapInfo(_xSize, _ySize);
 			for (int i = 0; i < _xSize; i++)
 			{
 				for (int j = 0; j < _ySize; j++)

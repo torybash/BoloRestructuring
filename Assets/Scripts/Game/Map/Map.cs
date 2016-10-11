@@ -24,11 +24,21 @@ namespace Bolo.Map
 			//int[,][,] graphicsGroundChunks = SplitArray(graphicsGroundMap);
 			//int[,][,] graphicsBlockChunks = SplitArray(graphicsBlockMap);
 
+//			var mapChunkInst = Game.prefabsLib.Create("MapChunk");
+//			var mapChunkInst2 = Game.prefabsLib.Create("MapChunk");
+
+			GameObject chunkObj = null;
+			chunkObj = Game.prefabsLib.Create("MapChunk");
+//			chunkObj = Game.prefabsLib.Create("MapChunk");
+
 			for (int i = 0; i < chunkAmount; i++)
 			{
 				for (int j = 0; j < chunkAmount; j++)
 				{
-					var mapChunkInst = Game.prefabsLib.Create("MapChunk");
+					Debug.Log("i, j: "+ i + ", " +j);
+//					chunkObj = Game.prefabsLib.Create("MapChunk");
+//					var mapChunkInst = Game.prefabsLib.Create("MapChunk");
+//					mapChunkInst.transform.SetParent(transform, false);
 					//mapChunkInst.GetComponent<MapChunk>().GenerateChunk(graphicsGroundChunks[i, j], graphicsBlockChunks[i, j], i * chunkSize, j * chunkSize, chunkSize);
 					//mapChunks[i, j] = mapChunk.GetComponent<MapChunk>();
 				}

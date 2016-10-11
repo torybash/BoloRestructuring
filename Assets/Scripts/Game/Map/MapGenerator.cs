@@ -11,9 +11,10 @@ namespace Bolo.Map
 
 		public Map GenerateMap(MapInfo mapInfo)
 		{
+
 			if (_map) Destroy(_map.gameObject);
 			_map = new GameObject("MapContainer").AddComponent<Map>();
-
+			_map.transform.SetParent(transform, false);
 			_map.GenerateChunks(mapInfo);
 
 			return _map;
