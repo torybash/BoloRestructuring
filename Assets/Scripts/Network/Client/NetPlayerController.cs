@@ -7,32 +7,20 @@ namespace Bolo.Net
 	public class NetPlayerController : NetworkBehaviour
 	{
 		[SerializeField]
-		private NetPlayerSpawning _spawning;
+		private NetSpawnCommander _spawnComm;
 		[SerializeField]
-		private NetPlayerMap _map;
+		private NetMapCommander _mapComm;
 
-		public NetPlayerSpawning spawning { get { return _spawning; } }
-		public NetPlayerMap map { get { return _map; } }
+		public NetSpawnCommander spawnComm { get { return _spawnComm; } }
+		public NetMapCommander mapComm { get { return _mapComm; } }
 
 
 		#region Client
-		public override void OnStartClient()
-		{
-			base.OnStartClient();
-
-			Game.Init(this);
-		}
-
 		public override void OnStartLocalPlayer()
 		{
 			base.OnStartLocalPlayer();
-		}
-		#endregion
 
-		#region Server
-		public override void OnStartServer()
-		{
-			base.OnStartServer();
+			Game.Init(this);
 		}
 		#endregion
 	}

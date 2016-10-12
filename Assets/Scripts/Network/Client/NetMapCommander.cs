@@ -4,14 +4,14 @@ using System.Collections;
 
 namespace Bolo.Net
 {
-	public class NetPlayerMap : NetworkBehaviour
+	public class NetMapCommander : NetworkBehaviour
 	{
 
 
 		#region Client
 
 		[ClientRpc]
-		private void RpcSetMap(int seed)
+		public void RpcSetMap(int seed)
 		{
 			Game.map.CreateMapFromSeed(seed);
 		}
@@ -23,14 +23,12 @@ namespace Bolo.Net
 		public override void OnStartServer()
 		{
 			base.OnStartServer();
-
-
 		}
 
-		public void ShareMap(int seed)
-		{
-			RpcSetMap(seed);
-		}
+		//public void ShareMap(int seed)
+		//{
+		//	RpcSetMap(seed);
+		//}
 		#endregion
 
 	}

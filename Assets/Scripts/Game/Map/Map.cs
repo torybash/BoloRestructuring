@@ -9,6 +9,13 @@ namespace Bolo.Map
 		private MapInfo _mapInfo;
 		private MapChunk[,] _mapChunks;
 
+		public MapInfo mapInfo
+		{
+			get
+			{
+				return _mapInfo;
+			}
+		}
 
 		public void GenerateChunks(MapInfo mapInfo, int chunkSize)
 		{	

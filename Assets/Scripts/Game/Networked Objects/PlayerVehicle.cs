@@ -9,6 +9,8 @@ namespace Bolo
 		{
 			Debug.Log("OnStartAuthority");
 			base.OnStartAuthority();
+
+			Game.SetVehicle(this);
 		}
 
 		public override void OnStartLocalPlayer()

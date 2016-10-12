@@ -4,18 +4,8 @@ using System.Collections;
 
 namespace Bolo.Net
 {
-	public class NetPlayerSpawning : NetworkBehaviour
+	public class NetSpawnCommander : NetworkBehaviour
 	{
-
-		private NetManagerPrefabs _netPrefabs;
-		public NetManagerPrefabs netPrefabs
-		{
-			get
-			{
-				if (_netPrefabs == null) _netPrefabs = NetworkManager.singleton.GetComponent<NetManagerPrefabs>(); //TODO make custom NetworkManager!!
-				return _netPrefabs;
-			}
-		}
 
 		#region Lifetime
 		void OnDestroy()
@@ -47,11 +37,9 @@ namespace Bolo.Net
 		[Command]
 		public void CmdRequestSpawnPlayerVehicle()
 		{
-			var vehicleInstance = netPrefabs.Create("PlayerVehicle");
-			if (vehicleInstance)
-			{
-				NetworkServer.SpawnWithClientAuthority(vehicleInstance.gameObject, connectionToClient);
-			}
+			//TODO check if valid request!
+
+			Game.server.CreatePlayerVehicle(connectionToClient);
 		}
 		#endregion
 
