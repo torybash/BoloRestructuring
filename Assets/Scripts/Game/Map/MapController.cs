@@ -8,9 +8,7 @@ namespace Bolo.Map
 		[SerializeField]
 		private MapGenerator _mapGen;
 
-		[SerializeField]
-		private MapInfoHelper _infoHelper;
-	
+		
 
 		public int CreateMapSeed()
 		{
@@ -19,8 +17,7 @@ namespace Bolo.Map
 
 		public void CreateMapFromSeed(int seed)
 		{
-			var _mapInfo = _infoHelper.GetRandomMapInfo();
-			var map = _mapGen.GenerateMap(_mapInfo);
+			_mapGen.GenerateMap(seed);
 		}
 	}
 }

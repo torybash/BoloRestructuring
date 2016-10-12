@@ -8,7 +8,6 @@ namespace Bolo.Net
 	{
 
 
-
 		#region Client
 
 		[ClientRpc]

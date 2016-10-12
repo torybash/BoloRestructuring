@@ -3,6 +3,15 @@ using System.Collections;
 
 namespace Bolo.DataClasses
 {
+
+	#region Map
+	public enum GroundType
+	{
+		GRASS = 0,
+		DIRT = 1,
+		SAND = 2
+	}
+
 	public enum BlockType
 	{
 		EMPTY = 0,
@@ -11,14 +20,14 @@ namespace Bolo.DataClasses
 		CRYSTAL = 3
 	}
 
-	public enum TileType
+	public enum GraphicsGroundType
 	{
 		GRASS = 0,
 		DIRT = 1,
 		SAND = 2
 	}
 
-	public enum GraphicsBlockTiles
+	public enum GraphicsBlockType
 	{
 		EMPTY = 0,
 		MID_ROCK = 1,
@@ -40,4 +49,5 @@ namespace Bolo.DataClasses
 		IMPASSABLE = 17,
 		CRYSTAL = 18
 	}
+	#endregion Map
 }

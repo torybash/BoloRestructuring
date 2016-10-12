@@ -9,33 +9,33 @@ namespace Bolo.Map
 		[SerializeField] private MeshFilter groundMeshFilter;
 		[SerializeField] private MeshFilter blockMeshFilter;
 
-		private int[,] _graphicsGroundChunk;
-		private int[,] _graphicsBlockChunk;
+		private int[,] _uvIdxGroundChunk;
+		private int[,] _uvIdxBlockChunk;
 		private int _posX, _posY;
 		private int _size; 
 
 		public void GenerateChunk(int[,] graphicsGroundChunk, int[,] graphicsBlockChunk, int posX, int posY, int size){
-			_graphicsGroundChunk = graphicsGroundChunk;
-			_graphicsBlockChunk = graphicsBlockChunk;
+			_uvIdxGroundChunk = graphicsGroundChunk;
+			_uvIdxBlockChunk = graphicsBlockChunk;
 			_posX = posX;
 			_posY = posY;
 			_size = size;
 	
-			UpdateMesh(groundMeshFilter, graphicsGroundChunk);
-			UpdateMesh(blockMeshFilter, graphicsBlockChunk);
+			UpdateMesh(groundMeshFilter, _uvIdxGroundChunk);
+			UpdateMesh(blockMeshFilter, _uvIdxBlockChunk);
 
 			transform.position = new Vector2(posX, posY);
 		}
 
-		public void ChangeBlockTile(int x, int y, GraphicsBlockTiles gfxType){
-			_graphicsBlockChunk[x,y] = (int)gfxType;
-			UpdateMesh(blockMeshFilter, _graphicsBlockChunk);
+		public void ChangeBlockTile(int x, int y, GraphicsBlockType gfxType){
+			_uvIdxBlockChunk[x,y] = (int) gfxType;
+			UpdateMesh(blockMeshFilter, _uvIdxBlockChunk);
 		}
 
 		void UpdateMesh(MeshFilter meshFilter, int[,] chunk){
-			Mesh mesh = new Mesh();
+			var mesh = new Mesh();
 
-			Vector3[] vertices = new Vector3[_size*_size*4];
+			var vertices = new Vector3[_size*_size*4];
 			for (int i = 0; i < _size; i++){
 				for (int j = 0; j < _size; j++){
 					vertices[i*4+j*4*_size]   =new Vector3(1+i,j+1, 0);
@@ -45,21 +45,18 @@ namespace Bolo.Map
 				}
 			}
 
-			Vector2[] uv = new Vector2[_size*_size*4];
+			var uv = new Vector2[_size*_size*4];
 			for (int i = 0; i < _size; i++){
 				for (int j = 0; j < _size; j++){
 
 					int xInt = chunk[i,j]%32;
 					int yInt = chunk[i,j]/32;
 
-
-
 					float uvSize = 1f/32f;
 					float startX = xInt * uvSize;
 					float endX = xInt * uvSize + uvSize;
 					float startY = yInt * uvSize;
 					float endY = yInt * uvSize + uvSize;
-				
 				
 					uv[i*4+j*4*_size]     =new Vector2(endX-0.001f,endY-0.001f);
 					uv[i*4+1+j*4*_size]   =new Vector2(endX-0.001f,startY);
@@ -68,7 +65,7 @@ namespace Bolo.Map
 				}
 			}
 
-			int[] triangles= new int[_size*_size*6];
+			var triangles= new int[_size*_size*6];
 			for (int i = 0; i < _size; i++){
 				for (int j = 0; j < _size; j++){
 					triangles[i*6+j*6*_size]      =0+i*4+j*4*_size;
@@ -90,6 +87,34 @@ namespace Bolo.Map
 		
 			meshFilter.mesh = mesh;
 		}
-		
+
+
+		#region Helpers
+		private int[,] GraphicsToIntArray(GraphicsGroundType[,] groundTypeArr)
+		{
+			int[,] arr = new int[groundTypeArr.GetLength(0), groundTypeArr.GetLength(1)];
+			for (int x = 0; x < groundTypeArr.GetLength(0); x++)
+			{
+				for (int y = 0; y < groundTypeArr.GetLength(1); y++)
+				{
+					arr[x, y] = (int)groundTypeArr[x, y];
+				}
+			}
+			return arr;
+		}
+		private int[,] GraphicsToIntArray(GraphicsBlockType[,] groundBlockArr)
+		{
+			int[,] arr = new int[groundBlockArr.GetLength(0), groundBlockArr.GetLength(1)];
+			for (int x = 0; x < groundBlockArr.GetLength(0); x++)
+			{
+				for (int y = 0; y < groundBlockArr.GetLength(1); y++)
+				{
+					arr[x, y] = (int)groundBlockArr[x, y];
+				}
+			}
+			return arr;
+		}
+		#endregion Helpers
+
 	}
 }
