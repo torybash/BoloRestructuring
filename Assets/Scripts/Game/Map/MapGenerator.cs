@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
+using Random = UnityEngine.Random;
 
 namespace Bolo.Map
 {
-	public class MapGenerator : MonoBehaviour
+	[Serializable]
+	public class MapGenerator
 	{
 
-
+		 //TODO Make configuration object instead!
 		[Header("Generation parameters")]
-
 		[SerializeField]
 		private int _mapSize;
 		[SerializeField]
@@ -16,7 +17,7 @@ namespace Bolo.Map
 
 
 
-		public Map GenerateMap(int seed)
+		public MapTiles GenerateMap(int seed, Transform parent)
 		{
 			if (_mapSize % 2 != 0 || _chunkSize % 2 != 0 || _chunkSize > _mapSize)
 			{
@@ -30,10 +31,15 @@ namespace Bolo.Map
 			var mapInfo = MapInfoHelper.GetRandomMapInfo(seed, _mapSize);
 
 			//Create new map
-			var _map = new GameObject("MapContainer").AddComponent<Map>();
-			_map.transform.SetParent(transform, false);
-			_map.GenerateChunks(mapInfo, _chunkSize);
+			var _map = new GameObject("MapContainer").AddComponent<MapTiles>();
+			_map.transform.SetParent(parent, false);
+			_map.Init(mapInfo, _chunkSize);
 			return _map;
+		}
+
+		public int CreateMapSeed() //TODO Create map-configuration instead (size, gen-parameters)
+		{
+			return Random.Range(0, int.MaxValue);
 		}
 	}
 }

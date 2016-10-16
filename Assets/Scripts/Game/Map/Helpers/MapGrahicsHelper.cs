@@ -4,7 +4,7 @@ using Bolo.DataClasses;
 
 namespace Bolo.Map
 {
-	public class MapGrahicsHelper : MonoBehaviour
+	public class MapGrahicsHelper
 	{
 
 		public static int[,] GetGraphicsGroundMap(GroundType[,] groundMap)

@@ -8,12 +8,6 @@ namespace Bolo.Map
 	public class MapInfoHelper
 	{
 
-
-		public MapInfoHelper()
-		{
-		}
-
-
 		#region MapInfo
 		public static MapInfo GetRandomMapInfo(int seed, int mapSize)
 		{

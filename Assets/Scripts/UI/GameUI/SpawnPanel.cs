@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Bolo;
+using Bolo.Util;
+using Bolo.Events;
 
 namespace Bolo.UI
 {
@@ -8,7 +10,7 @@ namespace Bolo.UI
 	{
 		public void Click_SpawnVehicle()
 		{
-			Game.events.TriggerEvent("RequestPlayerVehicle");
+			EventManager.TriggerEvent("RequestPlayerVehicle", null);
 		}
 	}
 }

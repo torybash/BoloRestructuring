@@ -6,7 +6,7 @@ namespace Bolo.DataClasses
 	{
 
 		private static object _lock = new object();
-		private static T _instance;
+		private static T s_instance;
 
 		private static bool applicationIsQuitting = false;
 
@@ -21,33 +21,33 @@ namespace Bolo.DataClasses
 						Debug.LogWarning("Instance '" + typeof(T) + "' already destroyed on application quit. Won't create again - returning null.");
 						return null;
 					}
-					if (_instance == null)
+					if (s_instance == null)
 					{
-						_instance = (T)FindObjectOfType(typeof(T));
+						s_instance = (T)FindObjectOfType(typeof(T));
 
 						if (FindObjectsOfType(typeof(T)).Length > 1)
 						{
 							Debug.LogError("There should never be more than 1 instance of singleton!");
-							return _instance;
+							return s_instance;
 						}
 
-						if (_instance == null)
+						if (s_instance == null)
 						{
 							Debug.LogError("Could not find an instance of type " + typeof(T));
 						}
 						else {
-							Debug.Log("Using instance: " + _instance.gameObject.name);
+							Debug.Log("Using instance: " + s_instance.gameObject.name);
 						}
 					}
 
-					return _instance;
+					return s_instance;
 				}
 			}
 		}
 
 		protected void OnDestroy()
 		{
-			if (Application.isPlaying && _instance == this) applicationIsQuitting = true;
+			if (Application.isPlaying && s_instance == this) applicationIsQuitting = true;
 		}
 	}
 }

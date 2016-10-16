@@ -6,8 +6,8 @@ namespace Bolo.Map
 {
 	public class MapChunk : MonoBehaviour {
 
-		[SerializeField] private MeshFilter groundMeshFilter;
-		[SerializeField] private MeshFilter blockMeshFilter;
+		[SerializeField] private MeshFilter _groundMeshFilter;
+		[SerializeField] private MeshFilter _blockMeshFilter;
 
 		private int[,] _uvIdxGroundChunk;
 		private int[,] _uvIdxBlockChunk;
@@ -21,15 +21,15 @@ namespace Bolo.Map
 			_posY = posY;
 			_size = size;
 	
-			UpdateMesh(groundMeshFilter, _uvIdxGroundChunk);
-			UpdateMesh(blockMeshFilter, _uvIdxBlockChunk);
+			UpdateMesh(_groundMeshFilter, _uvIdxGroundChunk);
+			UpdateMesh(_blockMeshFilter, _uvIdxBlockChunk);
 
 			transform.position = new Vector2(posX, posY);
 		}
 
 		public void ChangeBlockTile(int x, int y, GraphicsBlockType gfxType){
 			_uvIdxBlockChunk[x,y] = (int) gfxType;
-			UpdateMesh(blockMeshFilter, _uvIdxBlockChunk);
+			UpdateMesh(_blockMeshFilter, _uvIdxBlockChunk);
 		}
 
 		void UpdateMesh(MeshFilter meshFilter, int[,] chunk){
@@ -52,16 +52,31 @@ namespace Bolo.Map
 					int xInt = chunk[i,j]%32;
 					int yInt = chunk[i,j]/32;
 
-					float uvSize = 1f/32f;
-					float startX = xInt * uvSize;
-					float endX = xInt * uvSize + uvSize;
-					float startY = yInt * uvSize;
-					float endY = yInt * uvSize + uvSize;
-				
-					uv[i*4+j*4*_size]     =new Vector2(endX-0.001f,endY-0.001f);
-					uv[i*4+1+j*4*_size]   =new Vector2(endX-0.001f,startY);
-					uv[i*4+2+j*4*_size]   =new Vector2(startX,endY-0.001f);
-					uv[i*4+3+j*4*_size]   =new Vector2(startX,startY);
+					float uvSize = 1f / 32f;
+					//float startX = xInt / 32f;
+					//float endX = (xInt + 1) / 32f;
+					//float startY = yInt / 32f;
+					//float endY = (yInt + 1) / 32f;
+
+					float edge = 0.0001f;
+					float startX = xInt * uvSize + edge;
+					float endX = xInt * uvSize + uvSize - edge;
+					float startY = yInt * uvSize + edge;
+					float endY = yInt * uvSize + uvSize - edge;
+					//uv[i * 4 + j * 4 * _size] = new Vector2(endX, endY);
+					//uv[i * 4 + 1 + j * 4 * _size] = new Vector2(endX, startY);
+					//uv[i * 4 + 2 + j * 4 * _size] = new Vector2(startX, endY);
+					//uv[i * 4 + 3 + j * 4 * _size] = new Vector2(startX, startY);
+
+					//uv[i * 4 + j * 4 * _size] = new Vector2(endX - 0.01f, endY - 0.01f);
+					//uv[i * 4 + 1 + j * 4 * _size] = new Vector2(endX - 0.01f, startY);
+					//uv[i * 4 + 2 + j * 4 * _size] = new Vector2(startX, endY - 0.01f);
+					//uv[i * 4 + 3 + j * 4 * _size] = new Vector2(startX, startY);
+
+					uv[i * 4 + j * 4 * _size] = new Vector2(endX, endY);
+					uv[i * 4 + 1 + j * 4 * _size] = new Vector2(endX, startY);
+					uv[i * 4 + 2 + j * 4 * _size] = new Vector2(startX, endY);
+					uv[i * 4 + 3 + j * 4 * _size] = new Vector2(startX, startY);
 				}
 			}
 
