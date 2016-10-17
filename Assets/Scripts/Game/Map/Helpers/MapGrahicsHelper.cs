@@ -34,39 +34,7 @@ namespace Bolo.Map
 				for (int y = 0; y < height; y++)
 				{
 					var blockType = blockMap[x, y];
-					switch (blockType) {
-					case BlockType.ROCK:
-
-						gfxMap[x,y] = (int) GetGraphicsBlockTile(blockMap, x, y, BlockType.ROCK);
-
-						break;
-					case BlockType.EMPTY:
-					
-						gfxMap[x,y] = (int)GraphicsBlockType.EMPTY;
-						break;
-					case BlockType.IMPASSABLE:
-					
-						gfxMap[x,y] = (int)GraphicsBlockType.IMPASSABLE;
-						break;
-
-					case BlockType.CRYSTAL:
-					
-						gfxMap[x,y] = (int)GraphicsBlockType.CRYSTAL;
-						break;
-
-					default:
-						gfxMap[x,y] = (int)GraphicsBlockType.EMPTY;
-						break;
-					}
-					//var blockType = blockMap[x, y];
-					//if (blockType == BlockType.ROCK)
-					//{
-					//	gfxMap[x, y] = (int) GetGraphicsBlockTile(blockMap, x, y, BlockType.ROCK);
-					//}
-					//else
-					//{
-					//	gfxMap[x, y] = (int) blockType;
-					//}
+					gfxMap[x,y] = (int) GetGraphicsBlockTile(blockMap, x, y, blockType);
 				}
 			}
 
@@ -75,18 +43,32 @@ namespace Bolo.Map
 
 
 
-		private static GraphicsBlockType GetGraphicsBlockTile(BlockType[,] tileMap, int i, int j, BlockType type)
+		public static GraphicsBlockType GetGraphicsBlockTile(BlockType[,] tileMap, int x, int y, BlockType type)
 		{
-			var neighbors = new BitArray(4); //RIGHT, UP, LEFT, DOWN
-			neighbors[0] = tileMap[i + 1, j] == type;
-			neighbors[1] = tileMap[i, j + 1] == type;
-			neighbors[2] = tileMap[i - 1, j] == type;
-			neighbors[3] = tileMap[i, j - 1] == type;
+			switch (type)
+			{
+			case BlockType.EMPTY:
+				return GraphicsBlockType.EMPTY;
+			case BlockType.ROCK:
+				var neighbors = new BitArray(4); //RIGHT, UP, LEFT, DOWN
+				neighbors[0] = tileMap[x + 1, y] == type;
+				neighbors[1] = tileMap[x, y + 1] == type;
+				neighbors[2] = tileMap[x - 1, y] == type;
+				neighbors[3] = tileMap[x, y - 1] == type;
 
-			var intArray = new int[1];
-			neighbors.CopyTo(intArray, 0);
+				var intArray = new int[1];
+				neighbors.CopyTo(intArray, 0);
 
-			return (GraphicsBlockType)(1 + intArray[0]);
+				return (GraphicsBlockType)(1 + intArray[0]);
+			case BlockType.IMPASSABLE:
+				return GraphicsBlockType.IMPASSABLE;
+			case BlockType.CRYSTAL:
+				return GraphicsBlockType.CRYSTAL;
+			default:
+				return GraphicsBlockType.EMPTY;
+			}
+
+
 		}
 
 

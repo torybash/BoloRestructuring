@@ -1,45 +1,48 @@
 ﻿using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
+using Bolo.DataClasses;
 
 namespace Bolo.Map
 {
 	[Serializable]
 	public class MapGenerator
 	{
+		private const int cChunkSize = 64;
 
-		 //TODO Make configuration object instead!
-		[Header("Generation parameters")]
-		[SerializeField]
-		private int _mapSize;
-		[SerializeField]
-		private int _chunkSize;
-
-
-
-		public MapTiles GenerateMap(int seed, Transform parent)
+		#region MapInfo
+		public MapInfo GetRandomMapInfo(int seed, int mapSize)
 		{
-			if (_mapSize % 2 != 0 || _chunkSize % 2 != 0 || _chunkSize > _mapSize)
+			if (mapSize % 2 != 0 || cChunkSize > mapSize) // || cChunkSize % 2 != 0) 
 			{
-				Debug.Assert(_mapSize % 2 == 0, "Map size size must of power-of-two! (map size: " + _mapSize + ")");
-				Debug.Assert(_chunkSize % 2 == 0, "Chunk size size must of power-of-two! (chunk size: " + _chunkSize + ")");
-				Debug.Assert(_chunkSize <= _mapSize, "Map size must be larger than chunk size! (chunk size: " + _chunkSize + ", map size: " + _mapSize + ")");
+				Debug.Assert(mapSize % 2 == 0, "Map size size must of power-of-two! (map size: " + mapSize + ")");
+				//Debug.Assert(cChunkSize % 2 == 0, "Chunk size size must of power-of-two! (chunk size: " + cChunkSize + ")");
+				Debug.Assert(cChunkSize <= mapSize, "Map size must be larger than chunk size! (chunk size: " + cChunkSize + ", map size: " + mapSize + ")");
 				return null;
 			}
 
-			//Create mapInfo
-			var mapInfo = MapInfoHelper.GetRandomMapInfo(seed, _mapSize);
+			Random.InitState(seed);
+			var mapInfo = new MapInfo(mapSize, cChunkSize);
+			for (int x = 0; x < mapSize; x++)
+			{
+				for (int y = 0; y < mapSize; y++)
+				{
+					mapInfo.groundMap[x, y] = GroundType.GRASS;
+					var blockType = BlockType.EMPTY;
+					if (Random.value < 0.5) blockType = BlockType.EMPTY;
+					else if (Random.value < 0.95) blockType = BlockType.ROCK;
+					else if (Random.value < 1) blockType = BlockType.CRYSTAL;
 
-			//Create new map
-			var _map = new GameObject("MapContainer").AddComponent<MapTiles>();
-			_map.transform.SetParent(parent, false);
-			_map.Init(mapInfo, _chunkSize);
-			return _map;
+					mapInfo.blockMap[x, y] = blockType;
+
+					//make map walls
+					if (y == 0 || y == mapSize - 1) mapInfo.blockMap[x, y] = BlockType.IMPASSABLE;
+					if (x == 0 || x == mapSize - 1) mapInfo.blockMap[x, y] = BlockType.IMPASSABLE;
+				}
+			}
+			return mapInfo;
 		}
 
-		public int CreateMapSeed() //TODO Create map-configuration instead (size, gen-parameters)
-		{
-			return Random.Range(0, int.MaxValue);
-		}
+		#endregion MapInfo
 	}
 }

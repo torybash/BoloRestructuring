@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Bolo.Util;
 using System;
 using Random = UnityEngine.Random;
+using Bolo.DataClasses;
 
 namespace Bolo.Map
 {
@@ -14,6 +15,9 @@ namespace Bolo.Map
 		private MapInfo _mapInfo;
 		private MapChunk[,] _mapChunks;
 
+		private MapGenerator mapGen = new MapGenerator();
+
+		private Dictionary<Pos, float> tileDrillDict;
 
 		public MapInfo mapInfo
 		{
@@ -22,31 +26,37 @@ namespace Bolo.Map
 				return _mapInfo;
 			}
 		}
-		public void Init(MapInfo mapInfo, int chunkSize)
+
+
+
+		public void InitMap(MapGenerationParameters genParams, Transform transform)
 		{
+			_mapInfo = mapGen.GetRandomMapInfo(genParams.seed, genParams.size);
+
 			_mapCollision = new GameObject("MapCollision").AddComponent<MapCollision>();
 			_mapCollision.transform.SetParent(transform);
 			_mapCollision.mapInfo = mapInfo;
-			_mapInfo = mapInfo;
+			
+			tileDrillDict = new Dictionary<Pos, float>();
 
-			//Generate chunks
-			int chunkAmount = mapInfo._size / chunkSize; 
+			//Generate chunk parameters
+			int chunkAmount = mapInfo.size / mapInfo.chunkSize; 
 			_mapChunks = new MapChunk[chunkAmount, chunkAmount];
 
-			//Initialize graphics-tile maps
-			var graphicsGroundMap = MapGrahicsHelper.GetGraphicsGroundMap(mapInfo._groundMap);
-			var graphicsBlockMap = MapGrahicsHelper.GetGraphicsBlockMap(mapInfo._blockMap);
-
+			//Initialize chunk graphics-tile maps
+			var graphicsGroundMap = MapGrahicsHelper.GetGraphicsGroundMap(mapInfo.groundMap);
+			var graphicsBlockMap = MapGrahicsHelper.GetGraphicsBlockMap(mapInfo.blockMap);
 			var graphicsGroundChunks = MapGrahicsHelper.SplitArray(graphicsGroundMap, chunkAmount);
 			var graphicsBlockChunks = MapGrahicsHelper.SplitArray(graphicsBlockMap, chunkAmount);
 
+			//Create chunks
 			for (int x = 0; x < chunkAmount; x++)
 			{
 				for (int y = 0; y < chunkAmount; y++)
 				{
 					var chunkObj = Game.prefabsLib.Create("MapChunk");
 					chunkObj.transform.SetParent(transform, false);
-					chunkObj.GetComponent<MapChunk>().GenerateChunk(graphicsGroundChunks[x, y], graphicsBlockChunks[x, y], x * chunkSize, y * chunkSize, chunkSize);
+					chunkObj.GetComponent<MapChunk>().GenerateChunk(graphicsGroundChunks[x, y], graphicsBlockChunks[x, y], x * mapInfo.chunkSize, y * mapInfo.chunkSize, mapInfo.chunkSize);
 					_mapChunks[x, y] = chunkObj.GetComponent<MapChunk>();
 				}
 			}
@@ -58,7 +68,7 @@ namespace Bolo.Map
 		{
 			//TODO use playerPositions!
 			//TODO prevent spawn on block (or remove block on spawn)
-			var rndPos = new Vector2(Random.Range(1, mapInfo._size-1), Random.Range(1, mapInfo._size-1));
+			var rndPos = new Vector2(Random.Range(1, mapInfo.size-1), Random.Range(1, mapInfo.size-1));
 			return rndPos;
 		}
 
@@ -72,28 +82,68 @@ namespace Bolo.Map
 			_mapCollision.GenerateCollisionInArea(pos);
 		}
 
-		public void DrillTileAt(int x, int y, float damage)
+
+
+
+		public DrillResult DrillTileAt(Pos pos, float damage)
 		{
-			//int tileBeforeDrilling = mapInfo.blockMap[x,y];
-			//if (tileBeforeDrilling == (int)Constants.BlockTiles.ROCK){
-			//	if (player.lastDrilledTileX != x || player.lastDrilledTileY != y){
-			//		//Refill hp if drilling new tile
-			//		player.currentDrilledTileHpLeft = 3;
-			//	}
+			var result = new DrillResult { pos = pos };
+			var blockType = mapInfo.GetBlockAt(pos);
 
-			//	player.lastDrilledTileX = x;
-			//	player.lastDrilledTileY = y;
-			//	player.currentDrilledTileHpLeft -= drillDamage;
-			//	ChangeBlockTileAt(x,y, tileBeforeDrilling);
+			Debug.Log("DrillTileAt - pos: " + pos + ", dmg: "+ damage + ", blockType: "+ blockType);
 
+			if (blockType != BlockType.EMPTY)
+			{
+				if (!tileDrillDict.ContainsKey(pos))
+				{
+					tileDrillDict.Add(pos, 3f); //TODO!!! Make tile-class/struct? Make data for start HP!
+				}
+				tileDrillDict[pos] -= damage;
 
-			//	if (player.currentDrilledTileHpLeft <= 0){
-			//		ChangeBlockTileAt(x,y, (int)Constants.BlockTiles.EMPTY);
-			//		RemoveCollisionBoxAt(x, y);
-			//	}
-			//}else if (tileBeforeDrilling == (int)Constants.BlockTiles.CRYSTAL){
+				if (tileDrillDict[pos] <= 0)
+				{
+					//TODO, put somewhere that makes sense!
+					var pickups = new PickupData[Random.Range(2, 5)];
+					for (int i = 0; i < pickups.Length; i++)
+					{
+						pickups[i].resourceCount = Random.Range(4, 10);
+					}
+					result.removeTile = true;
+					result.pickups = pickups;
+				}
+			}
 
-			//}
+			return result;
 		}
+
+
+		public void ChangeTileAt(ChangeBlockParameters changeParams)
+		{
+			int x = changeParams.pos.x;
+			int y = changeParams.pos.y;
+			var block = changeParams.block;
+
+			mapInfo.SetBlock(x, y, block);
+
+			UpdateGraphicsTileAt(x, y);
+			UpdateGraphicsTileAt(x+1, y);
+			UpdateGraphicsTileAt(x-1, y);
+			UpdateGraphicsTileAt(x, y+1);
+			UpdateGraphicsTileAt(x, y-1);
+			//TODO Update surrounding tiles!
+		}
+
+
+		private void UpdateGraphicsTileAt(int x, int y)
+		{
+			int chunkSize = mapInfo.chunkSize;
+			var block = mapInfo.GetBlockAt(x, y);
+			var blockPos = new Pos(x/chunkSize, y/chunkSize);
+			var tilePos = new Pos(x%chunkSize, y%chunkSize);
+
+			var gfxBlock = MapGrahicsHelper.GetGraphicsBlockTile(mapInfo.blockMap, x, y, block);
+			_mapChunks[blockPos.x, blockPos.y].ChangeBlockTile(tilePos.x, tilePos.y, gfxBlock);
+		}
+		
 	}
 }

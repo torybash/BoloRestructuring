@@ -24,7 +24,7 @@ namespace Bolo.Spawns
 		}
 
 
-		public List<Vector2> GetAllPlayerPositions()
+		private List<Vector2> GetAllPlayerPositions()
 		{
 			var vehicles = _spawnableList.Where((x) => x.GetType().Equals(typeof(PlayerVehicle)));
 			var playerPositions = new List<Vector2>();
@@ -35,14 +35,17 @@ namespace Bolo.Spawns
 			return playerPositions;
 		}
 
-		public void SpawnPlayerVehicle(NetworkConnection connectionToClient, Vector2 spawnPos)
+		public void SpawnPlayerVehicle(NetworkConnection clientConn)
 		{
+			var playerPositions = GetAllPlayerPositions();
+			var spawnPos = Game.map.tiles.GetNewSpawnPosition(playerPositions);
 			var vehicleInstance = netPrefabs.Create("PlayerVehicle");
+
 			vehicleInstance.transform.position = spawnPos + 0.5f * Vector2.one; //TODO make tile position helper
 			if (vehicleInstance)
 			{
-				var localConn = Game.localPlayer.connectionToClient;
-				NetworkServer.SpawnWithClientAuthority(vehicleInstance, localConn);
+				//var localConn = Game.localPlayer.connectionToClient;
+				NetworkServer.SpawnWithClientAuthority(vehicleInstance, clientConn);
 
 				_spawnableList.Add(vehicleInstance.GetComponent<NetworkSpawnable>());
 			}

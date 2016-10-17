@@ -30,21 +30,31 @@ namespace Bolo.Net
 		
 		public void OnRequestPlayerVehicle(GameEventArgs args)
 		{
-			CmdRequestSpawnPlayerVehicle();
+			Debug.Log("OnRequestPlayerVehicle - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: "+ Game.localPlayer.connectionToClient);
+
+			
+			CmdRequestSpawnPlayerVehicle(Game.localPlayer.connectionToClient.connectionId);
 		}
 		#endregion
 
 
 		#region Server
 		[Command]
-		public void CmdRequestSpawnPlayerVehicle()
+		public void CmdRequestSpawnPlayerVehicle(int connId)
 		{
 			//TODO check if valid request!
 
-			var playerPositions = _spawner.GetAllPlayerPositions();
+			
+			//NetworkManager.singleton.
 
-			var spawnPos = Game.map.tiles.GetNewSpawnPosition(playerPositions);
-			_spawner.SpawnPlayerVehicle(connectionToClient, spawnPos);
+
+			NetworkConnection netConn = null;
+			if (connId >= 0 || connId < NetworkServer.connections.Count)
+				netConn = NetworkServer.connections[connId];
+
+			Debug.Log("CmdRequestSpawnPlayerVehicle - clientConn: " + connectionToClient + ", connId: "+ connId + ", netConn: "+ netConn);
+
+			_spawner.SpawnPlayerVehicle(netConn);
 		}
 		#endregion
 	}

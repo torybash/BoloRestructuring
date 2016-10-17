@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Bolo
 {
-	public class GameEffect : NetworkSpawnable
+	public abstract class GameEffect : NetworkSpawnable
 	{
 
 

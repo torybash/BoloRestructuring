@@ -51,7 +51,5 @@ namespace Bolo
 			I._localPlayer = netPlayer;
 		}
 
-
-
 	}
 }

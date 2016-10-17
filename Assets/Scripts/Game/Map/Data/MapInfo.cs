@@ -7,14 +7,25 @@ namespace Bolo.Map
 {
 	public class MapInfo
 	{
-		public int _size;
-		public GroundType[,] _groundMap;
-		public BlockType[,] _blockMap;
+		//public class Tile
+		//{
+		//	public GroundType ground;
+		//	public BlockType block;
+		//}
 
-		public MapInfo(int size){
-			_size = size;
-			_groundMap = new GroundType[size,size];
-			_blockMap = new BlockType[size,size];
+		public int size;
+		public int chunkSize;
+
+		public GroundType[,] groundMap;
+		public BlockType[,] blockMap;
+		//public Tile[,] _tileMap;
+
+		public MapInfo(int size, int chunkSize){
+			this.size = size;
+			this.chunkSize = chunkSize;
+			//_tileMap = new Tile[size, size];
+			groundMap = new GroundType[size, size];
+			blockMap = new BlockType[size, size];
 		}
 
 		public GroundType GetGroundAt(Pos pos)
@@ -24,8 +35,9 @@ namespace Bolo.Map
 
 		public GroundType GetGroundAt(int x, int y)
 		{
-			if (x < 0 || x >= _size || y < 0 || y >= _size) return GroundType.GRASS;
-			return _groundMap[x, y];
+			if (x < 0 || x >= size || y < 0 || y >= size) return GroundType.GRASS;
+			return groundMap[x, y];
+			//return _tileMap[x, y].ground;
 		}
 
 		public BlockType GetBlockAt(Pos pos)
@@ -35,8 +47,22 @@ namespace Bolo.Map
 
 		public BlockType GetBlockAt(int x, int y)
 		{
-			if (x < 0 || x >= _size || y < 0 || y >= _size) return BlockType.EMPTY;
-			return _blockMap[x, y];
+			if (x < 0 || x >= size || y < 0 || y >= size) return BlockType.EMPTY;
+			return blockMap[x, y];
+			//return _tileMap[x, y].block;
+		}
+
+		public void SetBlock(Pos pos, BlockType block)
+		{
+			SetBlock(pos.x, pos.y, block);
+		}
+
+		public void SetBlock(int x, int y, BlockType block)
+		{
+			if (x < 0 || x >= size || y < 0 || y >= size) return;
+			blockMap[x, y] = block;
 		}
 	}
+
+	
 }

@@ -8,6 +8,8 @@ namespace Bolo.Network
 		private Vector2 _moveInput = Vector2.zero;
 		private bool drilling = false;
 
+		public PlayerVehicle vehicle;
+
 		void Update()
 		{
 			_moveInput.x = Input.GetAxis("Horizontal"); 
@@ -19,9 +21,9 @@ namespace Bolo.Network
 
 		void FixedUpdate()
 		{
-			if (Game.player.vehicle != null)
+			if (vehicle != null)
 			{
-				Game.player.vehicle.InputUpdate(_moveInput, drilling);
+				vehicle.InputUpdate(_moveInput, drilling);
 			}
 		}
 	 

@@ -32,14 +32,14 @@ namespace Bolo.Map
 			_fogMesh = _fogFilter.mesh;
 		}
 
-		public void Setup(MapInfo mapInfo)
+		public void Setup(MapTiles map)
 		{
-			_mapInfo = mapInfo;
+			_mapInfo = map.mapInfo;
 
 			//Initialize explored tiles
-			tilesExplored = new byte[mapInfo._size, mapInfo._size];
-			for (int i = 0; i < mapInfo._size; i++) {
-				for (int j = 0; j < mapInfo._size; j++) {
+			tilesExplored = new byte[_mapInfo.size, _mapInfo.size];
+			for (int i = 0; i < _mapInfo.size; i++) {
+				for (int j = 0; j < _mapInfo.size; j++) {
 					tilesExplored[i,j] = 0;
 				}
 			}
@@ -77,8 +77,8 @@ namespace Bolo.Map
 					int realX = startFogX + i;
 					int realY = startFogY + j;
 
-					if (realX < 0 || realX > _mapInfo._size - _fogSizeX) continue;
-					if (realY < 0 || realY > _mapInfo._size - _fogSizeY) continue;
+					if (realX < 0 || realX > _mapInfo.size - _fogSizeX) continue;
+					if (realY < 0 || realY > _mapInfo.size - _fogSizeY) continue;
 					//Debug.Log("UpdateFogMap exploredMap["+realX+","+realY+"]: " + exploredMap[realX, realY]);
 					_fogMap[i,j] = exploredMap[realX, realY];
 				}
@@ -96,7 +96,7 @@ namespace Bolo.Map
 				tilesExplored[tilePos.x, tilePos.y] = 1;
 			}
 
-			var playerPos = Game.player.vehicle.transform.position;
+			var playerPos = Game.player.vehicle.transform.position; //TODO make reference to player somewhere better?
 			UpdateFogMap(new Pos((int)playerPos.x, (int)playerPos.y), tilesExplored);
 		}
 
@@ -105,8 +105,8 @@ namespace Bolo.Map
 			HashSet<int> clearTiles = new HashSet<int>();
 			int x0 = pos.x; int y0 = pos.y;
 
-			visibleTiles.Add(x0 + (y0*_mapInfo._size));
-			clearTiles.Add(x0 + (y0*_mapInfo._size));
+			visibleTiles.Add(x0 + (y0*_mapInfo.size));
+			clearTiles.Add(x0 + (y0*_mapInfo.size));
 		
 		
 			int numberOfAngles = 96;
@@ -120,13 +120,13 @@ namespace Bolo.Map
 				var tilesOnLine = GetTilesOnBresenhamLine(x0, y0, goalX, goalY);
 			
 				foreach (Pos tilePos in tilesOnLine) {
-					visibleTiles.Add(tilePos.x + (tilePos.y*_mapInfo._size));
+					visibleTiles.Add(tilePos.x + (tilePos.y*_mapInfo.size));
 				}
 			}
 
 			var list = new List<Pos>();
 			foreach (int tileID in visibleTiles) {
-				list.Add(new Pos(tileID%_mapInfo._size, tileID/_mapInfo._size));
+				list.Add(new Pos(tileID%_mapInfo.size, tileID/_mapInfo.size));
 			}
 
 			return list;

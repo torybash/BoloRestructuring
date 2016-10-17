@@ -32,8 +32,7 @@ namespace Bolo.Net
 			_players = new List<NetPlayer>();
 
 			//Create map
-			int mapSeed = Game.map.mapGen.CreateMapSeed();
-			Game.map.RpcCreateMap(mapSeed);
+			Game.map.CreateMapSeedAndShare();
 		}
 
 		public static void AddPlayer(NetPlayer netPlayer)

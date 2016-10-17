@@ -10,10 +10,10 @@ namespace Bolo
 		[SerializeField] private Rigidbody2D _body;
 
 		//Defintion values
-		private float _maxSpeed = 2f; //TODO!! Make vehicle/actor data-class instead!
-		private float _drillDamage = 1f;
-		private float _drillLength = 0.25f;
-		private float _drillCooldown = 0.2f;
+		public float maxSpeed = 2f; //TODO!! Make vehicle/actor data-class instead!
+		public float drillDamage = 1f;
+		public float drillLength = 0.5f;
+		public float drillCooldown = 0.2f;
 
 		//Variables
 		private int _hp;
@@ -24,6 +24,8 @@ namespace Bolo
 
 		private float _angle = 0;
 
+
+		
 
 		#region Client
 		public override void OnStartClient()
@@ -47,7 +49,7 @@ namespace Bolo
 			var currPos = new Pos( (int)_body.position.x, (int)_body.position.y);
 
 			var movementVector = new Vector2 (move.x, move.y) * Time.fixedDeltaTime;
-			var newWorldPos = _body.position + _maxSpeed * movementVector;
+			var newWorldPos = _body.position + maxSpeed * movementVector;
 			_body.MovePosition(newWorldPos);
 
 			var newPos = new Pos((int)newWorldPos.x, (int)newWorldPos.y);
@@ -80,7 +82,6 @@ namespace Bolo
 
 			if (drilling && _drillTimer < 0)
 			{
-				float drillLength = 0.25f;
 				_drillPosition = transform.position;
 				_drillPosition.x -= drillLength * Mathf.Sin(_angle);
 				_drillPosition.y += drillLength * Mathf.Cos(_angle);
@@ -88,9 +89,9 @@ namespace Bolo
 				var drillPos = new Pos((int)_drillPosition.x, (int)_drillPosition.y);
 
 				_isDrilling = true;
-				_drillTimer = 0.2f;
+				_drillTimer = drillCooldown;
 
-				EventManager.TriggerEvent("DrillTileAt", new DrillEventArgs(drillPos, _drillDamage));
+				EventManager.TriggerEvent("DrillTileAt", new DrillEventArgs(drillPos, drillDamage));
 				//Game.map.DrillTileAt(xtileInFront, ytileInFront, _drillDamage);
 			}
 		}
