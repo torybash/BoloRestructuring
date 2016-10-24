@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 namespace Bolo.DataClasses
@@ -50,4 +51,11 @@ namespace Bolo.DataClasses
 		CRYSTAL = 18
 	}
 	#endregion Map
+
+	[Serializable]
+	public enum ProjectileType
+	{
+		BULLET,
+		CANNON_BALL,
+	}
 }

@@ -1,30 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Bolo.Network
+namespace Bolo.Player
 {
 	public class PlayerInput : MonoBehaviour
 	{
-		private Vector2 _moveInput = Vector2.zero;
-		private bool drilling = false;
+		//private Vector2 _moveInput = Vector2.zero;
+		//private bool drilling = false;
 
-		public PlayerVehicle vehicle;
+		private PlayerInputData _input = new PlayerInputData();
 
+		private PlayerVehicle _vehicle;
+		private Camera _cam;
+
+		
+
+		#region Lifecycle
 		void Update()
 		{
-			_moveInput.x = Input.GetAxis("Horizontal"); 
-			_moveInput.y = Input.GetAxis("Vertical");
+			if (_vehicle != null)
+			{
+				_input.moveInput.x = Input.GetAxis("Horizontal"); 
+				_input.moveInput.y = Input.GetAxis("Vertical");
 
-			drilling = Input.GetKey(KeyCode.Space);
+				_input.drilling = Input.GetKey(KeyCode.Space);
+
+				_input.mousePosition = _cam.ScreenToWorldPoint(Input.mousePosition);
+
+				_input.shooting = Input.GetMouseButton(0);
+			}
+			
 		}
 
 
 		void FixedUpdate()
 		{
-			if (vehicle != null)
+			if (_vehicle != null)
 			{
-				vehicle.InputUpdate(_moveInput, drilling);
+				_vehicle.InputUpdate(_input);
 			}
+		}
+		#endregion Lifecycle
+
+
+		public void Init(PlayerVehicle vehicle, Camera cam)
+		{
+			_vehicle = vehicle;
+			_cam = cam;
 		}
 	 
 	}

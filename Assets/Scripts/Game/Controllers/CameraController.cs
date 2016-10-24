@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Bolo.DataClasses;
+using System;
 
 namespace Bolo
 {
@@ -18,7 +19,7 @@ namespace Bolo
 
 		}
 
-		void Update()
+		void FixedUpdate()
 		{
 			//TODO Receive events, for focus etc.
 			//TODO Follow on transform/player
@@ -31,6 +32,11 @@ namespace Bolo
 				cam.transform.position = newCamPos;
 			}
 
+		}
+
+		public Camera GetCamera()
+		{
+			return cam;
 		}
 	}
 }

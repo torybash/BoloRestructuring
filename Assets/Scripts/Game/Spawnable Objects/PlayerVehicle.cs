@@ -2,12 +2,15 @@
 using UnityEngine.Networking;
 using System.Collections;
 using Bolo.Events;
+using Bolo.Player;
+using System;
 
 namespace Bolo
 {
 	public class PlayerVehicle : Actor
 	{
 		[SerializeField] private Rigidbody2D _body;
+		[SerializeField] private VehicleTurret _turret;
 
 		//Defintion values
 		public float maxSpeed = 2f; //TODO!! Make vehicle/actor data-class instead!
@@ -24,7 +27,8 @@ namespace Bolo
 
 		private float _angle = 0;
 
-
+		//Animation ids
+		private int _drillHash = Animator.StringToHash("Drilling");
 		
 
 		#region Client
@@ -38,10 +42,12 @@ namespace Bolo
 		}
 
 
-		public void InputUpdate(Vector2 move, bool drilling)
+		public void InputUpdate(PlayerInputData input)
 		{
-			Movement(move);
-			Drilling(drilling);
+			Movement(input.moveInput);
+			Drilling(input.drilling);
+			Shooting(input.mousePosition, input.shooting);
+			//_turret.Shooting(input.mousePosition,)
 		}
 
 
@@ -71,7 +77,8 @@ namespace Bolo
 
 		private void Drilling(bool drilling)
 		{
-			//TODO animate.
+			netAnim.animator.SetBool("Drilling", drilling);
+			//netAnim.SetTrigger(_drillHash);
 
 			if (_drillTimer >= 0){
 				_drillTimer -= Time.fixedDeltaTime;
@@ -95,6 +102,16 @@ namespace Bolo
 				//Game.map.DrillTileAt(xtileInFront, ytileInFront, _drillDamage);
 			}
 		}
+
+		private void Shooting(Vector2 mousePosition, bool shooting)
+		{
+			var cannonDirection = mousePosition - (Vector2)transform.position;
+			float cannonAngle = Mathf.Atan2(cannonDirection.y, cannonDirection.x);
+
+			_turret.transform.eulerAngles = new Vector3(0, 0, cannonAngle * 180f / Mathf.PI);
+			
+		}
+
 
 		#endregion Client
 

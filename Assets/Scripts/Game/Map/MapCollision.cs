@@ -17,40 +17,54 @@ namespace Bolo.Map
 
 		[SerializeField] MapCollisionParameters _parameters = new MapCollisionParameters();
 
-		private MapInfo _mapInfo;
 		private BehaviourPool<BoxCollider2D> _colliderPool;
 
 		private Dictionary<Pos, BoxCollider2D> _colliders = new Dictionary<Pos, BoxCollider2D>();
 
 		private Rect _lastRect;
 
-		public MapInfo mapInfo { get { return _mapInfo; } set { _mapInfo = value; } }
+		private MapInfo _mapInfo;
 
 		void Awake()
 		{
 			_colliderPool = new BehaviourPool<BoxCollider2D>(gameObject, int.MaxValue);
 		}
 
-		public void GenerateCollisionInArea(Pos pos)
+
+		public void Setup(MapInfo mapInfo)
 		{
-			//TODO use rectss
-			//TODO remove colliders
-			Debug.Log("GenerateCollisionInArea: " + pos.x + " , " + pos.y + ", areaWidth: " + _parameters.areaWidth + ", areaHeight:" + _parameters.areaHeight);
-
-			var newRect = new Rect(pos.x - _parameters.areaWidth / 2f, pos.y - _parameters.areaHeight / 2f, _parameters.areaWidth, _parameters.areaHeight);
+			_mapInfo = mapInfo;
+		}
 
 
-			//_lastRect.
+		public void UpdateCollisionInArea(Pos pos)
+		{
+			//TODO use rects
 
-			for (int x = (int)newRect.xMin; x < (int)newRect.xMax; x++)
+			//Debug.Log("GenerateCollisionInArea: " + pos.x + " , " + pos.y + ", areaWidth: " + _parameters.areaWidth + ", areaHeight:" + _parameters.areaHeight);
+			var rect = new Rect(pos.x - _parameters.areaWidth / 2f, pos.y - _parameters.areaHeight / 2f, _parameters.areaWidth, _parameters.areaHeight);
+
+			//_lastRect
+
+			for (int x = (int)rect.xMin; x < (int)rect.xMax; x++)
 			{
-				for (int y = (int)newRect.yMin; y < (int)newRect.yMax; y++)
+				for (int y = (int)rect.yMin; y < (int)rect.yMax; y++)
 				{
-					var blockType = _mapInfo.GetBlockAt(x, y);
-					if (blockType == BlockType.EMPTY) continue;
+					var tilePos = new Pos(x, y);
+					var blockType = _mapInfo.GetBlockAt(tilePos);
+					bool hasCollider = _colliders.ContainsKey(tilePos);
+					if (blockType == BlockType.EMPTY)
+					{
+						if (hasCollider)
+						{
+							var coll = _colliders[tilePos];
+							_colliderPool.Return(coll);
+							_colliders.Remove(tilePos);
+						}
+						continue;
+					}
+					if (hasCollider) continue;
 
-					if (_colliders.ContainsKey(new Pos(x, y))) continue;
-					
 					var collInst = _colliderPool.Get();
 					collInst.offset = new Vector2(x, y) + Vector2.one * 0.5f ; 
 					collInst.size = Vector2.one;
@@ -58,7 +72,11 @@ namespace Bolo.Map
 					_colliders.Add(new Pos(x, y), collInst);
 				}
 			}
+
+			_lastRect = rect;
 		}
+
+
 	}
 }
 

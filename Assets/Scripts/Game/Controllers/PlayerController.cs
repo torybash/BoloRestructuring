@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Bolo.Util;
 using Bolo.DataClasses;
-using Bolo.Network;
+using Bolo.Player;
 
 namespace Bolo
 {
@@ -18,7 +18,7 @@ namespace Bolo
 		public void SetVehicle(PlayerVehicle vehicle)
 		{
 			_vehicle = vehicle;
-			_input.vehicle = vehicle;
+			_input.Init(vehicle, Game.cam.GetCamera());
 		}
 	}
 

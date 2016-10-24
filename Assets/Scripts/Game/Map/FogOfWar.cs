@@ -32,9 +32,9 @@ namespace Bolo.Map
 			_fogMesh = _fogFilter.mesh;
 		}
 
-		public void Setup(MapTiles map)
+		public void Setup(MapInfo mapInfo)
 		{
-			_mapInfo = map.mapInfo;
+			_mapInfo = mapInfo;
 
 			//Initialize explored tiles
 			tilesExplored = new byte[_mapInfo.size, _mapInfo.size];
@@ -48,7 +48,7 @@ namespace Bolo.Map
 
 		public void UpdateFog(Pos pos)
 		{
-			List<Pos> visibilityTiles = FindVisibleTiles(pos, 11);
+			var visibilityTiles = FindVisibleTiles(pos, 11);
 
 			foreach (var tilePos in visibilityTiles) {
 				tilesExplored[tilePos.x, tilePos.y] = 2;

@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using Bolo.Net;
 
-namespace Bolo.Net
+namespace Bolo.EditorExt
 {
 	[CustomEditor(typeof(NetManagerPrefabs))]
 	public class NetManagerPrefabsEditor : Editor {

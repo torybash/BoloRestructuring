@@ -18,27 +18,12 @@ namespace Bolo
 		[SerializeField]
 		private FogOfWar _fog;
 
-		public MapTiles tiles { get { return _tileMap; } }
-
-
-		
+		[SerializeField]
+		private MapCollision _mapCollision;
 
 
 
 		#region Setup
-		//protected override void Listen()
-		//{
-		//	EventManager.AddListener<DrillEventArgs>("DrillTileAt", OnDrillTileAt);
-		//	EventManager.AddListener<PlayerMovedToTileArgs>("PlayerMovedToTile", OnPlayerMovedToTile);
-
-		//}
-
-		//protected override void UnListen()
-		//{
-		//	EventManager.RemoveListener<DrillEventArgs>("DrillTileAt", OnDrillTileAt);
-		//	EventManager.RemoveListener<PlayerMovedToTileArgs>("PlayerMovedToTile", OnPlayerMovedToTile);
-		//}
-
 		protected override void Listen()
 		{
 			EventManager.AddListener("DrillTileAt", OnDrillTileAt);
@@ -53,13 +38,18 @@ namespace Bolo
 		#endregion
 
 
-
 		#region Server
 		[Server]
 		public void CreateMapSeedAndShare()
 		{
 			var mapParams = new MapGenerationParameters { seed = Random.Range(0, int.MaxValue), size = 256 }; //TODO make size customizable!
 			Game.map.RpcCreateMap(mapParams);
+		}
+
+		[Server]
+		public Vector2 GetNewSpawnPosition(List<Vector2> playerPositions)
+		{
+			return _tileMap.GetNewSpawnPosition(playerPositions);
 		}
 		#endregion Server
 
@@ -78,9 +68,9 @@ namespace Bolo
 		{
 			var movedArgs = (PlayerMovedToTileArgs) args;
 
-			tiles.UpdateCollision(movedArgs.pos);
+			_mapCollision.UpdateCollisionInArea(movedArgs.pos);
 			_fog.UpdateFog(movedArgs.pos);
-			Debug.Log("OnPlayerMovedToTile - args: " + movedArgs.pos);
+			//Debug.Log("OnPlayerMovedToTile - args: " + movedArgs.pos);
 		}
 		#endregion Event callbacks
 
@@ -92,7 +82,9 @@ namespace Bolo
 			_tileMap.InitMap(genParams, transform); // = mapGen.GenerateMap(genParams, transform);
 
 			//Init stuff for map
-			_fog.Setup(_tileMap);
+			var mapInfo = _tileMap.mapInfo;
+			_fog.Setup(mapInfo);
+			_mapCollision.Setup(mapInfo);
 		}
 
 		[ClientRpc]
@@ -105,6 +97,9 @@ namespace Bolo
 		public void RpcChangeTileAt(ChangeBlockParameters changeParams)
 		{
 			_tileMap.ChangeTileAt(changeParams);
+			var playerPos = new Pos((int)Game.player.vehicle.transform.position.x, (int)Game.player.vehicle.transform.position.y); //TODO! convert pos, nullchecks!!!
+			_fog.UpdateFog(playerPos );
+			_mapCollision.UpdateCollisionInArea(playerPos);
 		}
 		#endregion RPCs
 

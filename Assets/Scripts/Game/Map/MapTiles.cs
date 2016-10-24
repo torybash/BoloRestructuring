@@ -10,8 +10,6 @@ namespace Bolo.Map
 {
 	public class MapTiles : MonoBehaviour
 	{
-		
-		private MapCollision _mapCollision;
 		private MapInfo _mapInfo;
 		private MapChunk[,] _mapChunks;
 
@@ -31,12 +29,10 @@ namespace Bolo.Map
 
 		public void InitMap(MapGenerationParameters genParams, Transform transform)
 		{
+			//Generate map info
 			_mapInfo = mapGen.GetRandomMapInfo(genParams.seed, genParams.size);
-
-			_mapCollision = new GameObject("MapCollision").AddComponent<MapCollision>();
-			_mapCollision.transform.SetParent(transform);
-			_mapCollision.mapInfo = mapInfo;
 			
+			//Setup tile-drilling
 			tileDrillDict = new Dictionary<Pos, float>();
 
 			//Generate chunk parameters
@@ -77,12 +73,6 @@ namespace Bolo.Map
 
 		}
 
-		public void UpdateCollision(Pos pos)
-		{
-			_mapCollision.GenerateCollisionInArea(pos);
-		}
-
-
 
 
 		public DrillResult DrillTileAt(Pos pos, float damage)
@@ -90,7 +80,7 @@ namespace Bolo.Map
 			var result = new DrillResult { pos = pos };
 			var blockType = mapInfo.GetBlockAt(pos);
 
-			Debug.Log("DrillTileAt - pos: " + pos + ", dmg: "+ damage + ", blockType: "+ blockType);
+			//Debug.Log("DrillTileAt - pos: " + pos + ", dmg: "+ damage + ", blockType: "+ blockType);
 
 			if (blockType != BlockType.EMPTY)
 			{
