@@ -90,7 +90,7 @@ namespace Bolo
 		[ClientRpc]
 		public void RpcDrillEffectAt(Pos pos)
 		{
-			
+			//TODO
 		}
 
 		[ClientRpc]
