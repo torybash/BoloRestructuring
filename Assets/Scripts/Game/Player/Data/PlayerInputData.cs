@@ -8,7 +8,7 @@ namespace Bolo.Player
 	{
 
 		public Vector2 moveInput;
-		public bool drilling;
+		public bool useAction;
 
 		public Vector2 mousePosition;
 		public bool shooting;

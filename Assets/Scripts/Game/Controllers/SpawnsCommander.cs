@@ -43,18 +43,15 @@ namespace Bolo.Net
 		public void CmdRequestSpawnPlayerVehicle(int connId)
 		{
 			//TODO check if valid request!
-
-			
-			//NetworkManager.singleton.
-
-
 			NetworkConnection netConn = null;
 			if (connId >= 0 || connId < NetworkServer.connections.Count)
 				netConn = NetworkServer.connections[connId];
 
-			Debug.Log("CmdRequestSpawnPlayerVehicle - clientConn: " + connectionToClient + ", connId: "+ connId + ", netConn: "+ netConn);
+			//Debug.Log("CmdRequestSpawnPlayerVehicle - clientConn: " + connectionToClient + ", connId: "+ connId + ", netConn: "+ netConn);
 
-			_spawner.SpawnPlayerVehicle(netConn);
+			var vehicleInstance = _spawner.SpawnPlayerVehicle();
+			NetworkServer.SpawnWithClientAuthority(vehicleInstance, netConn);
+
 		}
 		#endregion
 	}

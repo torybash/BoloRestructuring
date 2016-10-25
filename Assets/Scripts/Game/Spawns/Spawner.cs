@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using Bolo.Net;
 using System.Linq;
+using UnityEngine.Networking;
 
 namespace Bolo.Spawns
 {
-	public class Spawner : NetworkBehaviour
+	public class Spawner : MonoBehaviour
 	{
 
 	 	private List<NetworkSpawnable> _spawnableList = new List<NetworkSpawnable>();
@@ -35,7 +35,7 @@ namespace Bolo.Spawns
 			return playerPositions;
 		}
 
-		public void SpawnPlayerVehicle(NetworkConnection clientConn)
+		public GameObject SpawnPlayerVehicle()
 		{
 			var playerPositions = GetAllPlayerPositions();
 			var spawnPos = Game.map.GetNewSpawnPosition(playerPositions);
@@ -45,10 +45,10 @@ namespace Bolo.Spawns
 			if (vehicleInstance)
 			{
 				//var localConn = Game.localPlayer.connectionToClient;
-				NetworkServer.SpawnWithClientAuthority(vehicleInstance, clientConn);
-
 				_spawnableList.Add(vehicleInstance.GetComponent<NetworkSpawnable>());
 			}
+
+			return vehicleInstance;
 		}
 	}
 }

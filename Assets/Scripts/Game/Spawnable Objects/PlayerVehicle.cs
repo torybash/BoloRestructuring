@@ -22,94 +22,89 @@ namespace Bolo
 		private int _hp;
 
 		private Vector2 _drillPosition = Vector2.zero;
-		private float _drillTimer = 0;
-		private bool _isDrilling = false;
+		private float _nextDrillTime = 0;
+
+		private Vector2 _cannonDirection = Vector2.zero;
+		private float _nextShotTime = 0;
 
 		private float _angle = 0;
 
 		//Animation ids
 		private int _drillHash = Animator.StringToHash("Drilling");
 		
+		public Vector2 bodyVec {
+			get
+			{
+				return _body.position;
+			}
+		}
+
+		public Pos drillPos
+		{
+			get
+			{
+				return new Pos((int)_drillPosition.x, (int)_drillPosition.y);
+			}
+		}
+
+		public Vector2 cannonDirection
+		{
+			get
+			{
+				return _cannonDirection;
+			}
+		}
 
 		#region Client
 		public override void OnStartClient()
 		{
 			//Debug.Log("OnStartClient - isServer: " + isServer);
 			base.OnStartClient();
-			//if (isServer) return;
+			//if (isServer) return; //TODO?
 
 			Game.player.SetVehicle(this);
 		}
 
 
-		public void InputUpdate(PlayerInputData input)
+		public Vector3 ApplyMovement(Vector2 moveVec)
 		{
-			Movement(input.moveInput);
-			Drilling(input.drilling);
-			Shooting(input.mousePosition, input.shooting);
-			//_turret.Shooting(input.mousePosition,)
-		}
-
-
-		private void Movement(Vector2 move){
-			var currPos = new Pos( (int)_body.position.x, (int)_body.position.y);
-
-			var movementVector = new Vector2 (move.x, move.y) * Time.fixedDeltaTime;
-			var newWorldPos = _body.position + maxSpeed * movementVector;
+			var newWorldPos = _body.position + maxSpeed * moveVec;
 			_body.MovePosition(newWorldPos);
 
-			var newPos = new Pos((int)newWorldPos.x, (int)newWorldPos.y);
-
-			if (currPos != newPos){
-				//Moved to new tile
-				//tileMap.PlayerMovedToTileAt(xnewtile, ynewtile, inputAccess.playerInfo.getOwner());
-				EventManager.TriggerEvent("PlayerMovedToTile", new PlayerMovedToTileArgs(newPos));
-				//TODO! send event: PlayerMovedToTile
-			}
-
-			if (movementVector.magnitude > 0.0001){
+			if (moveVec.magnitude > 0.0001){
 				//rotate
-				Vector3 normalizedMovement = Vector3.Normalize(movementVector);
-				_angle = Mathf.Atan2(normalizedMovement.y,normalizedMovement.x) - Mathf.PI/2f;
+				var normalizedMoveVec = Vector3.Normalize(moveVec);
+				_angle = Mathf.Atan2(normalizedMoveVec.y,normalizedMoveVec.x) - Mathf.PI/2f;
 				transform.eulerAngles = new Vector3(0, 0, _angle * 180f / Mathf.PI);
 			}
+			return newWorldPos;
 		}
 
-		private void Drilling(bool drilling)
+
+		public bool SetDrilling(bool drilling)
 		{
 			netAnim.animator.SetBool("Drilling", drilling);
-			//netAnim.SetTrigger(_drillHash);
-
-			if (_drillTimer >= 0){
-				_drillTimer -= Time.fixedDeltaTime;
-			}else{
-				//if (_isDrilling) GetComponent<NetworkView>().RPC("RPCSetAnimation", RPCMode.AllBuffered, false);
-				_isDrilling = false;
-			}
-
-			if (drilling && _drillTimer < 0)
-			{
-				_drillPosition = transform.position;
-				_drillPosition.x -= drillLength * Mathf.Sin(_angle);
-				_drillPosition.y += drillLength * Mathf.Cos(_angle);
-
-				var drillPos = new Pos((int)_drillPosition.x, (int)_drillPosition.y);
-
-				_isDrilling = true;
-				_drillTimer = drillCooldown;
-
-				EventManager.TriggerEvent("DrillTileAt", new DrillEventArgs(drillPos, drillDamage));
-				//Game.map.DrillTileAt(xtileInFront, ytileInFront, _drillDamage);
-			}
+			if (!drilling || Time.time < _nextDrillTime) return false;
+			_nextDrillTime = Time.time + drillCooldown;
+			_drillPosition = transform.position;
+			_drillPosition.x -= drillLength * Mathf.Sin(_angle);
+			_drillPosition.y += drillLength * Mathf.Cos(_angle);
+			return true;
 		}
 
-		private void Shooting(Vector2 mousePosition, bool shooting)
-		{
-			var cannonDirection = mousePosition - (Vector2)transform.position;
-			float cannonAngle = Mathf.Atan2(cannonDirection.y, cannonDirection.x);
 
+		public void SetDirection(Vector2 mousePosition)
+		{
+			_cannonDirection = mousePosition - (Vector2)transform.position;
+			float cannonAngle = Mathf.Atan2(_cannonDirection.y, _cannonDirection.x);
 			_turret.transform.eulerAngles = new Vector3(0, 0, cannonAngle * 180f / Mathf.PI);
-			
+		}
+
+		public bool Shooting(bool shooting)
+		{
+			if (!shooting || Time.time < _nextShotTime) return false;
+			_nextShotTime = Time.time + 0.2f; //TODO!!
+			return true;
 		}
 
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using UnityEngine;
 
 namespace Bolo.Events
 {
@@ -24,6 +23,17 @@ namespace Bolo.Events
         public PlayerMovedToTileArgs(Pos pos)
         {
             this.pos = pos;
+		}
+	}
+
+	public class ShootProjectileArgs : GameEventArgs 
+	{
+		public Vector3 dir { get; private set; }
+		//public WeaponData, TODO maybe extract bullet data from weapon data?
+
+		public ShootProjectileArgs(Vector3 dir)
+        {
+            this.dir = dir;
 		}
 	}
 }
