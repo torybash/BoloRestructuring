@@ -10,6 +10,13 @@ namespace Bolo.Map
 {
 	public class MapTiles : MonoBehaviour
 	{
+		public class DrillResult
+		{
+			public Pos pos;
+			public bool removeTile = false;
+			public PickupData[] pickups;
+		}
+
 		private MapInfo _mapInfo;
 		private MapChunk[,] _mapChunks;
 

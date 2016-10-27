@@ -1,14 +1,12 @@
-﻿using UnityEngine;
-using System.Collections;
-using Bolo.DataClasses;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
-namespace Bolo.Map
+namespace Bolo
 {
 	public struct MapGenerationParameters
 	{
 		public int seed;
-		public int size;		
+		public int size;
 	}
-
 }

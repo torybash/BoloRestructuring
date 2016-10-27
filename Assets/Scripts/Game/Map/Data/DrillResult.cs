@@ -5,10 +5,5 @@ using System;
 
 namespace Bolo.Map
 {
-	public class DrillResult
-	{
-		public Pos pos;
-		public bool removeTile = false;
-		public PickupData[] pickups;
-	}
+
 }

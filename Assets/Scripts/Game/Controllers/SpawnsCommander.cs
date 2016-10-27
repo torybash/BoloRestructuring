@@ -11,29 +11,44 @@ namespace Bolo.Net
 {
 	public class SpawnsCommander : CommanderBehaviour
 	{
-
+		public GameObject bulletPrefab; //TODO <---REMOVE
 
 		#region Client
 		protected override void Listen()
 		{
 			EventManager.AddListener("RequestPlayerVehicle", OnRequestPlayerVehicle);
+			EventManager.AddListener("ShootProjectile", OnShootProjectile);
 		}
 
 		protected override void UnListen()
 		{
 			EventManager.RemoveListener("RequestPlayerVehicle", OnRequestPlayerVehicle);
+			EventManager.RemoveListener("ShootProjectile", OnShootProjectile);
 		}
 		#endregion Client
 
+						
 
 		#region Event callbacks
 		public void OnRequestPlayerVehicle(GameEventArgs args)
 		{
 			Debug.Log("OnRequestPlayerVehicle - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.localPlayer.connectionToClient);
 
-			//int clientConnectionId = Game.localPlayer.connectionToClient.connectionId;
-			//CmdRequestSpawnPlayerVehicle(clientConnectionId);
+
 			CmdRequestSpawnPlayerVehicle();
+		}
+
+		public void OnShootProjectile(GameEventArgs args)
+		{
+			//Debug.Log("OnShootProjectile - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.localPlayer.connectionToClient);
+
+			var shootArgs = (ShootProjectileArgs)args;
+
+			var bullet = Instantiate(bulletPrefab);
+			bullet.GetComponent<Projectile>().Init(shootArgs.pos, shootArgs.dir * shootArgs.weapon.speed);
+
+			 //ClientScene.RegisterSpawnHandler()
+			 //CmdShootProjectile();
 		}
 
 		#endregion Event callbacks
@@ -53,6 +68,20 @@ namespace Bolo.Net
 			Game.spawns.SpawnPlayerVehicle(connectionToClient);
 
 		}
-	#endregion
-}
+
+		//[Command]
+		//public void CmdShootProjectile()
+		//{
+		//	//TODO check if valid request!
+		//	//NetworkConnection netConn = null;
+		//	//if (connId >= 0 || connId < NetworkServer.connections.Count)
+		//	//	netConn = NetworkServer.connections[connId];
+
+		//	Debug.Log("CmdRequestSpawnPlayerVehicle - clientConn: " + connectionToClient); // + ", connId: " + connId + ", netConn: " + netConn);
+
+		//	Game.spawns.SpawnPlayerVehicle(connectionToClient);
+
+		//}
+		#endregion
+	}
 }

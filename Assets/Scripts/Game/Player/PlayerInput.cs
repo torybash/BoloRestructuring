@@ -83,7 +83,7 @@ namespace Bolo.Player
 			bool shooting = _vehicle.Shooting(_input.shooting);
 			if (shooting)
 			{
-				var shootArgs = new ShootProjectileArgs(_vehicle.cannonDirection);
+				var shootArgs = new ShootProjectileArgs(_vehicle.transform.position, _vehicle.cannonDirection, _vehicle.weaponData);
 				EventManager.TriggerEvent("ShootProjectile", shootArgs);
 			}
 		}

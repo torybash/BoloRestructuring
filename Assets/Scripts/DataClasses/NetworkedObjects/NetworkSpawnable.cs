@@ -4,6 +4,7 @@ using System.Collections;
 
 namespace Bolo
 {
+	[RequireComponent(typeof(NetworkTransform))]
 	public abstract class NetworkSpawnable : NetworkBehaviour
 	{
 

@@ -4,6 +4,7 @@ using System.Collections;
 using Bolo.Events;
 using Bolo.Player;
 using System;
+using Bolo.DataClasses;
 
 namespace Bolo
 {
@@ -12,11 +13,15 @@ namespace Bolo
 		[SerializeField] private Rigidbody2D _body;
 		[SerializeField] private VehicleTurret _turret;
 
+
+
 		//Defintion values
 		public float maxSpeed = 2f; //TODO!! Make vehicle/actor data-class instead!
 		public float drillDamage = 1f;
 		public float drillLength = 0.5f;
 		public float drillCooldown = 0.2f;
+
+		public WeaponData weaponData;
 
 		//Variables
 		private int _hp;
@@ -60,6 +65,15 @@ namespace Bolo
 		{
 			base.OnStartAuthority();
 
+			weaponData = new WeaponData(); //TODO!!!!!!!!!!!!!
+			weaponData.bulletSpread = 0;
+			weaponData.cooldownDuration = 0.2f;
+			weaponData.damage = 5f;
+			weaponData.range = 8f;
+			weaponData.title = "Cannon";
+			weaponData.speed = 4f;
+			weaponData.type = ProjectileType.BULLET;
+
 			Game.player.SetVehicle(this);
 		}
 
@@ -93,7 +107,7 @@ namespace Bolo
 
 		public void SetDirection(Vector2 mousePosition)
 		{
-			_cannonDirection = mousePosition - (Vector2)transform.position;
+			_cannonDirection = (mousePosition - (Vector2)transform.position).normalized;
 			float cannonAngle = Mathf.Atan2(_cannonDirection.y, _cannonDirection.x);
 			_turret.transform.eulerAngles = new Vector3(0, 0, cannonAngle * 180f / Mathf.PI);
 		}

@@ -18,6 +18,10 @@ namespace Bolo.EditorExt
 		private GUIContent cont;
 		private float startX, startY;
 
+		private Vector2 _scrollPosition;
+
+		private Vector2 _boxSize;
+
 		//Default values
 		private const float cWidth = 150f, cHeight = 18f;
 		private const float cSpaceX = 110f, cSpaceY = 20f;
@@ -43,33 +47,50 @@ namespace Bolo.EditorExt
 
 		void OnGUI()
 		{
+			if (s_window == null) Init();
+
 			startX = 5f; startY = 5f;
 
 			EditorGUI.LabelField(new Rect(startX, startY, cWidth, cHeight), "Weapons", EditorStyles.boldLabel);
+			startY += cHeight + 5f;
 
-			//GUI.BeginScrollView()
-			foreach (var weapon in _weapons)
+			var visibleRect=new Rect(startX, startY, s_window.position.width-startX-10, s_window.position.height-startY-5);
+			var contentRect=new Rect(startX, startY, _boxSize.x, (_boxSize.y * _weapons.Count + 10) + 10);
+
+			//DrawBox(new Rect(startX - 5, startY - 5, contentRect.width + 10, contentRect.height + 10), new Color(0.65f, 0.7f, 0.9f));
+
+			_scrollPosition = GUI.BeginScrollView(visibleRect, _scrollPosition, contentRect);
+			for (int i = 0; i < _weapons.Count; i++)
 			{
-
-				//Field("Name", "Name of weapon", ref weapon.title));
-
-				DrawBox(new Rect(startX, startY += cSpaceY, position.width - startX - 10, 40), new Color(0.8f, 0.8f, 0.8f));
-
-				cont = new GUIContent("Name", "Name of weapon");
-				EditorGUI.LabelField(new Rect(startX, startY, cWidth, cHeight), cont);
-				weapon.title = EditorGUI.TextField(new Rect(startX + cSpaceX, startY, cWidth, cHeight), weapon.title);
-
-				cont = new GUIContent("Cooldown", "How often the weapon is able shoot");
-				EditorGUI.LabelField(new Rect(startX, startY += cSpaceY, cWidth, cHeight), cont);
-				weapon.cooldownDuration = EditorGUI.FloatField(new Rect(startX + cSpaceX, startY, cWidth, cHeight), weapon.cooldownDuration);
-
-
+				var weapon = _weapons[i];
+				DrawBox(new Rect(startX, startY += 5, _boxSize.x + 10, _boxSize.y + 10), new Color(0.8f * (i%2), 0.8f, 0.8f));
+				_boxSize = DrawWeaponBox(weapon, startX + 5, startY + 5);
+				startY += _boxSize.y + 10f;
 			}
-
+			GUI.EndScrollView();
 
 			if(GUI.changed) EditorUtility.SetDirty(_library);
 		}
 
+
+		private Vector2 DrawWeaponBox(WeaponData weapon, float startX, float startY)
+		{
+			var boxSize = new Vector2(startX, startY);
+
+			cont = new GUIContent("Name", "Name of weapon");
+			EditorGUI.LabelField(new Rect(startX, startY, cWidth, cHeight), cont, EditorStyles.boldLabel);
+			weapon.title = EditorGUI.TextField(new Rect(startX + cSpaceX, startY, cWidth, cHeight), weapon.title);
+
+			cont = new GUIContent("Cooldown", "How often the weapon is able to shoot");
+			EditorGUI.LabelField(new Rect(startX, startY += cSpaceY, cWidth, cHeight), cont);
+			weapon.cooldownDuration = EditorGUI.FloatField(new Rect(startX + cSpaceX, startY, cWidth, cHeight), weapon.cooldownDuration);
+			startY += cHeight;
+
+			boxSize.x = cWidth + cSpaceX;
+			boxSize.y = startY - boxSize.y;
+			
+			return boxSize;
+		}
 
 		private void DrawBox(Rect rect, Color color)
 		{

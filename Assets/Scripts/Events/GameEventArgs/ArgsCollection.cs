@@ -28,12 +28,15 @@ namespace Bolo.Events
 
 	public class ShootProjectileArgs : GameEventArgs 
 	{
+		public Vector3 pos { get; private set; }
 		public Vector3 dir { get; private set; }
-		//public WeaponData, TODO maybe extract bullet data from weapon data?
+		public WeaponData weapon { get; private set; }
 
-		public ShootProjectileArgs(Vector3 dir)
+		public ShootProjectileArgs(Vector3 pos, Vector3 dir, WeaponData weapon)
         {
+            this.pos = pos;
             this.dir = dir;
+            this.weapon = weapon;
 		}
 	}
 }
