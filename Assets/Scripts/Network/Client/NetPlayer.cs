@@ -17,6 +17,8 @@ namespace Bolo.Net
 			base.OnStartLocalPlayer();
 
 			Game.SetLocalPlayer(this);
+
+			Game.SetCommanders(GetComponent<MapCommander>(), GetComponent<SpawnsCommander>());
 		}
 
 		#endregion

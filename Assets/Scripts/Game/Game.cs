@@ -3,6 +3,7 @@ using System.Collections;
 using Bolo.Util;
 using Bolo.Net;
 using Bolo.DataClasses;
+using System;
 
 namespace Bolo
 {
@@ -15,6 +16,9 @@ namespace Bolo
 
 		[Header("Controllers")]
 		[SerializeField] private CameraController _cam;
+
+
+
 		[SerializeField] private GameUIController _ui;
 		[SerializeField] private PlayerController _player;
 
@@ -51,5 +55,11 @@ namespace Bolo
 			I._localPlayer = netPlayer;
 		}
 
+
+		public static void SetCommanders(MapCommander mapCommander, SpawnsCommander spawnsCommander)
+		{
+			I._map = mapCommander;
+			I._spawns = spawnsCommander;
+		}
 	}
 }

@@ -9,10 +9,9 @@ namespace Bolo.DataClasses
 	public abstract class CommanderBehaviour : NetworkBehaviour
 	{
 
-		public override void OnStartClient()
+		public override void OnStartLocalPlayer()
 		{
-			base.OnStartClient();
-			//if (!isServer) return;
+			base.OnStartLocalPlayer();
 
 			Listen();
 		}
@@ -20,7 +19,6 @@ namespace Bolo.DataClasses
 		public override void OnNetworkDestroy()
 		{
 			base.OnNetworkDestroy();
-			//if (!isServer) return;
 
 			UnListen();
 		}

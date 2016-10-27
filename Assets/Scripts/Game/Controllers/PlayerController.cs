@@ -14,9 +14,11 @@ namespace Bolo
 		public PlayerVehicle vehicle { get { return _vehicle; } private set { _vehicle = value; } }
 		[SerializeField] private PlayerInput _input;	
 		//public PlayerInput input { get { return _input; } private set { _input = value; } }
-
+		 
 		public void SetVehicle(PlayerVehicle vehicle)
 		{
+			//Debug.LogError("SetVehicle");
+
 			_vehicle = vehicle;
 			_input.Init(vehicle, Game.cam.GetCamera());
 		}

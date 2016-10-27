@@ -56,11 +56,9 @@ namespace Bolo
 		}
 
 		#region Client
-		public override void OnStartClient()
+		public override void OnStartAuthority()
 		{
-			//Debug.Log("OnStartClient - isServer: " + isServer);
-			base.OnStartClient();
-			//if (isServer) return; //TODO?
+			base.OnStartAuthority();
 
 			Game.player.SetVehicle(this);
 		}

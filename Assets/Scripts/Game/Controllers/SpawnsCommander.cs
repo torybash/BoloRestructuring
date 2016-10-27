@@ -14,7 +14,7 @@ namespace Bolo.Net
 
 		[SerializeField]
 		private Spawner _spawner;
-		
+
 		#region Client
 		protected override void Listen()
 		{
@@ -27,32 +27,33 @@ namespace Bolo.Net
 		}
 
 
-		
+
 		public void OnRequestPlayerVehicle(GameEventArgs args)
 		{
-			Debug.Log("OnRequestPlayerVehicle - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: "+ Game.localPlayer.connectionToClient);
+			Debug.Log("OnRequestPlayerVehicle - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.localPlayer.connectionToClient);
 
-			
-			CmdRequestSpawnPlayerVehicle(Game.localPlayer.connectionToClient.connectionId);
+			//int clientConnectionId = Game.localPlayer.connectionToClient.connectionId;
+			//CmdRequestSpawnPlayerVehicle(clientConnectionId);
+			CmdRequestSpawnPlayerVehicle();
 		}
 		#endregion
 
 
 		#region Server
 		[Command]
-		public void CmdRequestSpawnPlayerVehicle(int connId)
+		public void CmdRequestSpawnPlayerVehicle()
 		{
 			//TODO check if valid request!
-			NetworkConnection netConn = null;
-			if (connId >= 0 || connId < NetworkServer.connections.Count)
-				netConn = NetworkServer.connections[connId];
+			//NetworkConnection netConn = null;
+			//if (connId >= 0 || connId < NetworkServer.connections.Count)
+			//	netConn = NetworkServer.connections[connId];
 
-			//Debug.Log("CmdRequestSpawnPlayerVehicle - clientConn: " + connectionToClient + ", connId: "+ connId + ", netConn: "+ netConn);
+			Debug.Log("CmdRequestSpawnPlayerVehicle - clientConn: " + connectionToClient); // + ", connId: " + connId + ", netConn: " + netConn);
 
-			var vehicleInstance = _spawner.SpawnPlayerVehicle();
-			NetworkServer.SpawnWithClientAuthority(vehicleInstance, netConn);
+			var vehicleInstance = _spawner.SpawnPlayerVehicle(); 
+			NetworkServer.SpawnWithClientAuthority(vehicleInstance, connectionToClient);
 
 		}
-		#endregion
-	}
+	#endregion
+}
 }
