@@ -23,8 +23,10 @@ namespace Bolo
 		[SerializeField] private PlayerController _player;
 
 		[Header("Commanders")]
-		[SerializeField] private MapCommander _map;
-		[SerializeField] private SpawnsCommander _spawns;
+		[SerializeField] private MapManager _map;
+		[SerializeField] private SpawnsManager _spawns;
+		//[SerializeField] private MapCommander _map;
+		//[SerializeField] private SpawnsCommander _spawns;
 
 		[Header("Asset References")]
 		[SerializeField] private PrefabLibrary _prefabsLib;
@@ -35,8 +37,10 @@ namespace Bolo
 		public static GameUIController ui { get { return I._ui; } }
 		public static PlayerController player { get { return I._player; } }
 
-		public static MapCommander map { get { return I._map; } }
-		public static SpawnsCommander spawns { get { return I._spawns; } }
+		public static MapManager map { get { return I._map; } }
+		public static SpawnsManager spawns { get { return I._spawns; } }
+		//public static MapCommander map { get { return I._map; } }
+		//public static SpawnsCommander spawns { get { return I._spawns; } }
 
 		public static NetPlayer localPlayer { get { return I._localPlayer; } }
 
@@ -53,13 +57,8 @@ namespace Bolo
 		{
 			//Set ref to network player
 			I._localPlayer = netPlayer;
-		}
 
-
-		public static void SetCommanders(MapCommander mapCommander, SpawnsCommander spawnsCommander)
-		{
-			I._map = mapCommander;
-			I._spawns = spawnsCommander;
+			map.Setup();
 		}
 	}
 }

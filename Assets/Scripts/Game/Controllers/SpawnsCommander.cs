@@ -12,8 +12,6 @@ namespace Bolo.Net
 	public class SpawnsCommander : CommanderBehaviour
 	{
 
-		[SerializeField]
-		private Spawner _spawner;
 
 		#region Client
 		protected override void Listen()
@@ -25,9 +23,10 @@ namespace Bolo.Net
 		{
 			EventManager.RemoveListener("RequestPlayerVehicle", OnRequestPlayerVehicle);
 		}
+		#endregion Client
 
 
-
+		#region Event callbacks
 		public void OnRequestPlayerVehicle(GameEventArgs args)
 		{
 			Debug.Log("OnRequestPlayerVehicle - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.localPlayer.connectionToClient);
@@ -36,7 +35,8 @@ namespace Bolo.Net
 			//CmdRequestSpawnPlayerVehicle(clientConnectionId);
 			CmdRequestSpawnPlayerVehicle();
 		}
-		#endregion
+
+		#endregion Event callbacks
 
 
 		#region Server
@@ -50,8 +50,7 @@ namespace Bolo.Net
 
 			Debug.Log("CmdRequestSpawnPlayerVehicle - clientConn: " + connectionToClient); // + ", connId: " + connId + ", netConn: " + netConn);
 
-			var vehicleInstance = _spawner.SpawnPlayerVehicle(); 
-			NetworkServer.SpawnWithClientAuthority(vehicleInstance, connectionToClient);
+			Game.spawns.SpawnPlayerVehicle(connectionToClient);
 
 		}
 	#endregion

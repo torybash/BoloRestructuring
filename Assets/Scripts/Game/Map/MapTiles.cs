@@ -24,11 +24,13 @@ namespace Bolo.Map
 				return _mapInfo;
 			}
 		}
-
+		public MapGenerationParameters genParams { get; private set; }
 
 
 		public void InitMap(MapGenerationParameters genParams, Transform transform)
 		{
+			this.genParams = genParams;
+
 			//Generate map info
 			_mapInfo = mapGen.GetRandomMapInfo(genParams.seed, genParams.size);
 			

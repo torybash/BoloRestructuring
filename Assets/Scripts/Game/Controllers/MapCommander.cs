@@ -12,16 +12,46 @@ namespace Bolo
 {
 	public class MapCommander : CommanderBehaviour
 	{
-		[SerializeField]
-		private MapTiles _tileMap;
+		//[SerializeField]
+		//private MapTiles _tileMap;
 
-		[SerializeField]
-		private FogOfWar _fog;
+		//[SerializeField]
+		//private FogOfWar _fog;
 
-		[SerializeField]
-		private MapCollision _mapCollision;
+		//[SerializeField]
+		//private MapCollision _mapCollision;
 
 
+
+		#region Lifecycle
+		public override void OnStartAuthority()
+		{
+						Debug.LogError("OnStartAuthority - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
+
+			base.OnStartAuthority();
+		}
+		public override void OnStartClient()
+		{
+						Debug.LogError("OnStartClient - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
+
+			base.OnStartClient();
+		}
+		public override void OnStartLocalPlayer()
+		{
+						Debug.LogError("OnStartLocalPlayer - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
+
+			base.OnStartLocalPlayer();
+		}
+		public override void OnStartServer()
+		{
+			Debug.LogError("OnStartServer - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
+			base.OnStartServer();
+
+			//if (isLocalPlayer) return; //TODO?
+
+			Game.map.SendMapToClient(connectionToClient);
+		}
+		#endregion Lifecycle
 
 		#region Setup
 		protected override void Listen()
@@ -38,20 +68,7 @@ namespace Bolo
 		#endregion
 
 
-		#region Server
-		[Server]
-		public void CreateMapSeedAndShare()
-		{
-			var mapParams = new MapGenerationParameters { seed = Random.Range(0, int.MaxValue), size = 256 }; //TODO make size customizable!
-			Game.map.RpcCreateMap(mapParams);
-		}
 
-		[Server]
-		public Vector2 GetNewSpawnPosition(List<Vector2> playerPositions)
-		{
-			return _tileMap.GetNewSpawnPosition(playerPositions);
-		}
-		#endregion Server
 
 
 
@@ -64,61 +81,27 @@ namespace Bolo
 			CmdDrillTileAt(drillArgs.pos, drillArgs.damage);
 		}
 
+
 		private void OnPlayerMovedToTile(GameEventArgs args)
 		{
-			var movedArgs = (PlayerMovedToTileArgs) args;
+			Game.map.PlayerMovedToTile(args);
 
-			_mapCollision.UpdateCollisionInArea(movedArgs.pos);
-			_fog.UpdateFog(movedArgs.pos);
+			//var movedArgs = (PlayerMovedToTileArgs) args;
+
+			//_mapCollision.UpdateCollisionInArea(movedArgs.pos);
+			//_fog.UpdateFog(movedArgs.pos);
 			//Debug.Log("OnPlayerMovedToTile - args: " + movedArgs.pos);
 		}
 		#endregion Event callbacks
 
-		#region RPCs
-		[ClientRpc]
-		public void RpcCreateMap(MapGenerationParameters genParams)
-		{
-			//Create new map
-			_tileMap.InitMap(genParams, transform); // = mapGen.GenerateMap(genParams, transform);
 
-			//Init stuff for map
-			var mapInfo = _tileMap.mapInfo;
-			_fog.Setup(mapInfo);
-			_mapCollision.Setup(mapInfo);
-		}
-
-		[ClientRpc]
-		public void RpcDrillEffectAt(Pos pos)
-		{
-			//TODO
-		}
-
-		[ClientRpc]
-		public void RpcChangeTileAt(ChangeBlockParameters changeParams)
-		{
-			_tileMap.ChangeTileAt(changeParams);
-			var playerPos = new Pos((int)Game.player.vehicle.transform.position.x, (int)Game.player.vehicle.transform.position.y); //TODO! convert pos, nullchecks!!!
-			_fog.UpdateFog(playerPos );
-			_mapCollision.UpdateCollisionInArea(playerPos);
-		}
-		#endregion RPCs
 
 		
 		#region Commands
 		[Command]
 		public void CmdDrillTileAt(Pos pos, float damage)
 		{
-			var result = _tileMap.DrillTileAt(pos, damage);	
-			if (result.removeTile)
-			{
-				var changeParams = new ChangeBlockParameters { pos = pos, block = BlockType.EMPTY };
-				RpcChangeTileAt(changeParams);
-
-				//TODO Spawn pickups!
-			}
-			RpcDrillEffectAt(pos);
-
-
+			Game.map.DrillTileAt(pos, damage);
 		}
 
 		#endregion Commands

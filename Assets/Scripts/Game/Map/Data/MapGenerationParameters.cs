@@ -10,4 +10,5 @@ namespace Bolo.Map
 		public int seed;
 		public int size;		
 	}
+
 }
