@@ -10,6 +10,9 @@ namespace Bolo.Spawns
 	public class Spawner : MonoBehaviour
 	{
 
+		[SerializeField] private Projectile _projectilePrefab;
+		private SpawnPool<Projectile> _projectilePool;
+
 	 	private List<NetworkSpawnable> _spawnableList = new List<NetworkSpawnable>();
 
 		//TODO make custom NetworkManager!!
@@ -23,6 +26,10 @@ namespace Bolo.Spawns
 			}
 		}
 
+		void Awake()
+		{
+			_projectilePool = new SpawnPool<Projectile>(_projectilePrefab, 100);
+		}
 
 		private List<Vector2> GetAllPlayerPositions()
 		{
@@ -35,7 +42,8 @@ namespace Bolo.Spawns
 			return playerPositions;
 		}
 
-		public GameObject SpawnPlayerVehicle()
+
+		public GameObject GetPlayerVehicleInstance()
 		{
 			var playerPositions = GetAllPlayerPositions();
 			var spawnPos = Game.map.GetNewSpawnPosition(playerPositions);
@@ -49,6 +57,13 @@ namespace Bolo.Spawns
 			}
 
 			return vehicleInstance;
+		}
+
+		public Projectile GetProjectileInstance(out NetworkHash128 assetId)
+		{
+			assetId = _projectilePool.assetId;
+			var projectileInst = _projectilePool.GetInstance();
+			return projectileInst.GetComponent<Projectile>();
 		}
 	}
 }

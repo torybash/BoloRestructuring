@@ -11,19 +11,17 @@ namespace Bolo.Net
 {
 	public class SpawnsCommander : CommanderBehaviour
 	{
-		public GameObject bulletPrefab; //TODO <---REMOVE
+		
 
 		#region Client
 		protected override void Listen()
 		{
 			EventManager.AddListener("RequestPlayerVehicle", OnRequestPlayerVehicle);
-			EventManager.AddListener("ShootProjectile", OnShootProjectile);
 		}
 
 		protected override void UnListen()
 		{
 			EventManager.RemoveListener("RequestPlayerVehicle", OnRequestPlayerVehicle);
-			EventManager.RemoveListener("ShootProjectile", OnShootProjectile);
 		}
 		#endregion Client
 
@@ -38,18 +36,7 @@ namespace Bolo.Net
 			CmdRequestSpawnPlayerVehicle();
 		}
 
-		public void OnShootProjectile(GameEventArgs args)
-		{
-			//Debug.Log("OnShootProjectile - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.localPlayer.connectionToClient);
 
-			var shootArgs = (ShootProjectileArgs)args;
-
-			var bullet = Instantiate(bulletPrefab);
-			bullet.GetComponent<Projectile>().Init(shootArgs.pos, shootArgs.dir * shootArgs.weapon.speed);
-
-			 //ClientScene.RegisterSpawnHandler()
-			 //CmdShootProjectile();
-		}
 
 		#endregion Event callbacks
 

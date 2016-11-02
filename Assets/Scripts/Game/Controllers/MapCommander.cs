@@ -26,25 +26,25 @@ namespace Bolo
 		#region Lifecycle
 		public override void OnStartAuthority()
 		{
-						Debug.LogError("OnStartAuthority - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
+						//Debug.LogError("OnStartAuthority - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
 
 			base.OnStartAuthority();
 		}
 		public override void OnStartClient()
 		{
-						Debug.LogError("OnStartClient - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
+						//Debug.LogError("OnStartClient - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
 
 			base.OnStartClient();
 		}
 		public override void OnStartLocalPlayer()
 		{
-						Debug.LogError("OnStartLocalPlayer - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
+						//Debug.LogError("OnStartLocalPlayer - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
 
 			base.OnStartLocalPlayer();
 		}
 		public override void OnStartServer()
 		{
-			Debug.LogError("OnStartServer - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
+			//Debug.LogError("OnStartServer - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
 			base.OnStartServer();
 
 			//if (isLocalPlayer) return; //TODO?

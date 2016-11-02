@@ -9,15 +9,13 @@ namespace Bolo
 	{
 		[SerializeField] private Rigidbody2D _body;
 
-		//Make type TODO
-
-		private int _resourceCount;
+		public ResourceData _resource;
 
 
 		public void Init()
 		{
 			//Set values
-			_resourceCount = 5; //TODO
+			//_resourceCount = 5; //TODO
 
 			//Set sprite
 			//TODO

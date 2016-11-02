@@ -3,9 +3,9 @@ using System.Collections;
 using Bolo.DataClasses;
 using System;
 
-namespace Bolo.Map
+namespace Bolo.Net
 {
-	public struct ChangeBlockParameters
+	public struct ChangeBlockCommand
 	{
 		public Pos pos;
 		public BlockType block;

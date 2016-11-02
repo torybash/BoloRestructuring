@@ -5,6 +5,8 @@ using Bolo.Util;
 using System;
 using Random = UnityEngine.Random;
 using Bolo.DataClasses;
+using Bolo.Net;
+using Bolo.Pickups;
 
 namespace Bolo.Map
 {
@@ -14,7 +16,7 @@ namespace Bolo.Map
 		{
 			public Pos pos;
 			public bool removeTile = false;
-			public PickupData[] pickups;
+			public ResourceData[] pickups;
 		}
 
 		private MapInfo _mapInfo;
@@ -101,14 +103,8 @@ namespace Bolo.Map
 
 				if (tileDrillDict[pos] <= 0)
 				{
-					//TODO, put somewhere that makes sense!
-					var pickups = new PickupData[Random.Range(2, 5)];
-					for (int i = 0; i < pickups.Length; i++)
-					{
-						pickups[i].resourceCount = Random.Range(4, 10);
-					}
+					result.pickups = PickupHelper.GeneratePickupData(blockType);
 					result.removeTile = true;
-					result.pickups = pickups;
 				}
 			}
 
@@ -116,7 +112,7 @@ namespace Bolo.Map
 		}
 
 
-		public void ChangeTileAt(ChangeBlockParameters changeParams)
+		public void ChangeTileAt(ChangeBlockCommand changeParams)
 		{
 			int x = changeParams.pos.x;
 			int y = changeParams.pos.y;

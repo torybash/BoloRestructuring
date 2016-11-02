@@ -53,9 +53,25 @@ namespace Bolo.DataClasses
 	#endregion Map
 
 	[Serializable]
-	public enum ProjectileType
+	public enum WeaponType
 	{
-		BULLET,
-		CANNON_BALL,
+		CANNON,
+		LASER,
+	}
+
+	[Serializable]
+	public enum WeaponSlotType
+	{
+		PRIMARY,
+		SECONDARY,
+	}
+
+	[Serializable]
+	public enum ResourceType
+	{
+		EMPTY,
+		METAL,
+		CRYSTALS,
+		GOLD,
 	}
 }

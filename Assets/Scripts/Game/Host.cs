@@ -4,8 +4,9 @@ using Bolo.Map;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using Bolo.Net;
 
-namespace Bolo.Net
+namespace Bolo
 {
 	public class Host : NetworkBehaviour
 	{
@@ -38,6 +39,21 @@ namespace Bolo.Net
 		public static void AddPlayer(NetPlayer netPlayer)
 		{
 			s_instance._players.Add(netPlayer);
+		}
+
+		public static NetworkConnection GetConnectionFromId(int connId) //TODO Maybe move this somewhere else!
+		{
+			NetworkConnection clientConn = null;
+			for (int i = 0; i < NetworkServer.connections.Count; i++)
+			{
+				//Debug.Log("Conn " + i + " : " + NetworkServer.connections[i]);
+				if (NetworkServer.connections[i] != null && NetworkServer.connections[i].connectionId == connId)
+				{
+					clientConn = NetworkServer.connections[i];
+					break;
+				}
+			}
+			return clientConn;
 		}
 	}
 }
