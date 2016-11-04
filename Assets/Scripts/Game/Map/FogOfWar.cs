@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Bolo.DataClasses;
 using System.Collections.Generic;
-using System;
+using System.Linq;
 using System.Collections;
 
 namespace Bolo.Map
@@ -18,9 +18,9 @@ namespace Bolo.Map
 		private int _fogSizeX = 32; 
 		private int _fogSizeY = 32; 
 
-		private byte[,] _fogMap = new byte[32,32];
+		private byte[,] _fogMap;
 
-		private Vector2 _fogDisplacement = new Vector2(-16, -16);
+		private Vector2 _fogDisplacement;
 		private byte[,] tilesExplored;
 
 		private List<Pos> lastVisibilityTiles = new List<Pos>();
@@ -35,6 +35,8 @@ namespace Bolo.Map
 		public void Setup(MapInfo mapInfo)
 		{
 			_mapInfo = mapInfo;
+			_fogMap = new byte[_fogSizeX,_fogSizeY];
+			_fogDisplacement = new Vector2(-_fogSizeY/2, -_fogSizeX/2);
 
 			//Initialize explored tiles
 			tilesExplored = new byte[_mapInfo.size, _mapInfo.size];
@@ -49,7 +51,6 @@ namespace Bolo.Map
 		public void UpdateFog(Pos pos)
 		{
 			var visibilityTiles = FindVisibleTiles(pos, 11);
-
 			foreach (var tilePos in visibilityTiles) {
 				tilesExplored[tilePos.x, tilePos.y] = 2;
 			}
@@ -68,25 +69,23 @@ namespace Bolo.Map
 		}
 
 		private void UpdateFogMap(Pos pos, byte[,] exploredMap){
-			int startFogX = pos.x - _fogSizeX/2;
-			int startFogY = pos.y - _fogSizeY/2;
-
-			for (int i = 0; i < _fogSizeX; i++) {
-				for (int j = 0; j < _fogSizeY; j++) {
+			var startFogPos = new Pos(pos.x - _fogSizeX / 2, pos.y - _fogSizeY / 2);
+			for (int x = 0; x < _fogSizeX; x++) {
+				for (int y = 0; y < _fogSizeY; y++) {
 					
-					int realX = startFogX + i;
-					int realY = startFogY + j;
+					int realX = startFogPos.x + x;
+					int realY = startFogPos.y + y;
 
-					if (realX < 0 || realX > _mapInfo.size - _fogSizeX) continue;
-					if (realY < 0 || realY > _mapInfo.size - _fogSizeY) continue;
-					//Debug.Log("UpdateFogMap exploredMap["+realX+","+realY+"]: " + exploredMap[realX, realY]);
-					_fogMap[i,j] = exploredMap[realX, realY];
+					if (realX < 0 || realX >= _mapInfo.size ||
+						realY < 0 || realY >= _mapInfo.size) continue;
+
+					_fogMap[x,y] = exploredMap[realX, realY];
 				}
 			}
 
 			UpdateMesh();
 
-			transform.position = new Vector3(startFogX + 0.5f, startFogY + 0.5f, -4f); //TODO Convert tile pos, create constant
+			transform.position = new Vector3(startFogPos.x + 0.5f, startFogPos.y + 0.5f, -4f); //TODO Convert tile pos, create constant
 		}
 	
 		private IEnumerator _RemoveFromVisibility(List<Pos> missingList){

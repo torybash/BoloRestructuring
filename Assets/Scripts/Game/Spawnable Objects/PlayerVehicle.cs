@@ -15,7 +15,7 @@ namespace Bolo
 		[SerializeField] private VehicleTurret _turret;
 
 
-
+		#region Fields
 		//Vehicle state data
 		public float maxSpeed = 2f; //TODO!! Make vehicle/actor data-class instead!
 		public float drillDamage = 1f;
@@ -26,8 +26,7 @@ namespace Bolo
 		public WeaponData secondaryWeapon;
 
 		//Variables
-		[SyncVar]
-		private int _hp;
+		private float _hp;
 
 		private Vector2 _drillPosition = Vector2.zero;
 		private float _nextDrillTime = 0;
@@ -39,7 +38,10 @@ namespace Bolo
 
 		//Animation ids
 		private int _drillHash = Animator.StringToHash("Drilling");
-		
+		#endregion Fields
+
+
+		#region Property
 		public Vector2 bodyVec {
 			get
 			{
@@ -62,6 +64,8 @@ namespace Bolo
 				return _cannonDirection;
 			}
 		}
+		#endregion Property
+
 
 		#region Client
 		public override void OnStartAuthority()
@@ -115,7 +119,7 @@ namespace Bolo
 				damage = drillDamage
 			};
 
-			CmdDrillingTileAt(drillCmd, Game.localPlayer.playerControllerId);
+			CmdDrillingTileAt(drillCmd, Game.client.playerControllerId);
 		}
 
 
@@ -143,7 +147,7 @@ namespace Bolo
 				pos = transform.position,
 				dir = _cannonDirection
 			};
-			CmdShooting(shootCmd, Game.localPlayer.connectionToServer.connectionId); //TODO, send more shot data, send weapon id!
+			CmdShooting(shootCmd, Game.client.connectionToServer.connectionId); //TODO, send more shot data, send weapon id!
 		}
 		#endregion Client
 
@@ -163,6 +167,21 @@ namespace Bolo
 			//TODO get weapon that is shooting, create weapon stats to pass on
 			var weapon = WeaponData.DBGWeapon;
 			Game.spawns.ShootProjectile(cmd.pos, cmd.dir, weapon, connId);
+		}
+
+		[Command]
+		public void CmdHitByProjectile(Vector2 knockBackForce, float damage)
+		{
+			_hp -= damage;
+			_body.AddForce(knockBackForce);
+
+			//TODO, make property for HP, make Hurt/Die method
+		}
+
+		[Command]
+		public void CmdPickUpResource(ResourceType type, int resourceCount)
+		{
+			Game.player.AddResouces(type, resourceCount);
 		}
 		#endregion Server
 	}

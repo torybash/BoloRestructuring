@@ -6,7 +6,6 @@ namespace Bolo.Player
 {
 	public class PlayerInputData
 	{
-
 		public Vector2 moveInput;
 		public bool useAction;
 

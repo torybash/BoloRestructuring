@@ -13,6 +13,9 @@ namespace Bolo.Spawns
 		[SerializeField] private Projectile _projectilePrefab;
 		private SpawnPool<Projectile> _projectilePool;
 
+		[SerializeField] private ResourcePickup _resourcePickupPrefab;
+		private SpawnPool<ResourcePickup> _resourcePickupPool;
+
 	 	private List<NetworkSpawnable> _spawnableList = new List<NetworkSpawnable>();
 
 		//TODO make custom NetworkManager!!
@@ -29,6 +32,7 @@ namespace Bolo.Spawns
 		void Awake()
 		{
 			_projectilePool = new SpawnPool<Projectile>(_projectilePrefab, 100);
+			_resourcePickupPool = new SpawnPool<ResourcePickup>(_resourcePickupPrefab, 100);
 		}
 
 		private List<Vector2> GetAllPlayerPositions()
@@ -65,5 +69,14 @@ namespace Bolo.Spawns
 			var projectileInst = _projectilePool.GetInstance();
 			return projectileInst.GetComponent<Projectile>();
 		}
+		
+		public ResourcePickup GetResourceInstance(out NetworkHash128 assetId)
+		{
+			assetId = _resourcePickupPool.assetId;
+			var projectileInst = _resourcePickupPool.GetInstance();
+			return projectileInst.GetComponent<ResourcePickup>();
+		}
+
+		
 	}
 }

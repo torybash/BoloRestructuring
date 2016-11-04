@@ -57,6 +57,7 @@ namespace Bolo
 				weaponData.title = "Cannon";
 				weaponData.speed = 4f;
 				weaponData.type = WeaponType.CANNON;
+				weaponData.knockBack = 10f;
 				return weaponData;
 			}
 		}

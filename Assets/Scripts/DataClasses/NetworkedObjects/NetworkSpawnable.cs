@@ -10,7 +10,7 @@ namespace Bolo
 
 		[SerializeField]
 		private NetworkTransform _netTrans;
-		
+
 		public NetworkTransform netTrans
 		{
 			get
@@ -20,8 +20,6 @@ namespace Bolo
 			}
 		}
 
-		//public override void OnStartClient() {
-		//	base.OnStartClient();
-		//}
+		public virtual void SetPool<T>(SpawnPool<T> pool) where T : NetworkSpawnable{}
 	}
 }

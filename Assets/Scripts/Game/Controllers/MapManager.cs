@@ -45,13 +45,6 @@ namespace Bolo
 
 
 		#region Client
-		public void Setup()
-		{
-			//Debug.LogError("Setup - isServer: " + isServer);
-
-			//NetworkManager.singleton.client.RegisterHandler(MsgType.Highest + 1, OnMsgCreateMap); //TODO!!! Make msg types
-		}
-
 		public void PlayerMovedToTile(GameEventArgs args)
 		{
 			var movedArgs = (PlayerMovedToTileArgs)args;
@@ -91,7 +84,7 @@ namespace Bolo
 		//[Server]
 		public void GenerateAndCreateMap()
 		{
-			var genParams = new MapGenerationParameters { seed = Random.Range(0, int.MaxValue), size = 256 }; //TODO make size customizable!																									  //Game.map.RpcCreateMap(mapParams);
+			var genParams = new MapGenerationParameters { seed = Random.Range(0, int.MaxValue), size = 64 }; //TODO make size customizable!																									  //Game.map.RpcCreateMap(mapParams);
 			CreateMap(genParams);
 		}
 
@@ -111,6 +104,7 @@ namespace Bolo
 				RpcChangeTileAt(cmd);
 
 				//TODO Spawn pickups!
+				Game.spawns.SpawnResources(new Vector2(pos.x, pos.y) + Vector2.one * 0.5f, result.pickups); //TODO Pos conversion! DO IT!
 			}
 			RpcDrillEffectAt(pos);
 		}

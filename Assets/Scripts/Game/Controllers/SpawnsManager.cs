@@ -24,7 +24,7 @@ namespace Bolo
 
 		public void ShootProjectile(Vector3 pos, Vector3 dir, WeaponData weapon, int connId)
 		{
-			Debug.Log("OnShootProjectile - connId: " + connId + ", connectionToClient: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.localPlayer.connectionToClient);
+			Debug.Log("OnShootProjectile - connId: " + connId + ", connectionToClient: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.client.connectionToClient);
 
 			var clientConn = Host.GetConnectionFromId(connId);
 			if (clientConn != null)
@@ -35,6 +35,22 @@ namespace Bolo
 
 				NetworkServer.Spawn(projectileInst.gameObject, hash);
 			}
+		}
+
+		public void SpawnResources(Vector2 pos, ResourceData[] pickups)
+		{
+			for (int i = 0; i < pickups.Length; i++)
+			{
+				var pickup = pickups[i];
+
+				var hash = default(NetworkHash128);
+				var resourceInst = _spawner.GetResourceInstance(out hash);
+				resourceInst.Init(pickup);
+				resourceInst.transform.position = pos;
+
+				NetworkServer.Spawn(resourceInst.gameObject, hash);
+			}
+
 		}
 		#endregion Server
 	}

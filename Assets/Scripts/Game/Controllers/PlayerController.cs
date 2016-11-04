@@ -1,28 +1,56 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
-using System.Collections.Generic;
-using System.Linq;
-using Bolo.Util;
 using Bolo.DataClasses;
 using Bolo.Player;
+using System;
 
 namespace Bolo
 {
 	public class PlayerController : ControllerBehaviour
 	{
-		private PlayerVehicle _vehicle;	
-		public PlayerVehicle vehicle { get { return _vehicle; } private set { _vehicle = value; } }
-		[SerializeField] private PlayerInput _input;	
-		 
+		[SerializeField]
+		private PlayerInput _input;
+
+		private PlayerInventory _inventory;
+
+		public PlayerVehicle vehicle { get; private set; }
+
+
+		#region Lifecycle
+		void Update()
+		{
+			if (vehicle) _input.HandleInput();
+		}
+
+		void FixedUpdate()
+		{
+			if (vehicle) _input.ApplyInput();
+		}
+		#endregion Lifecycle
+
+
+		public void Init()
+		{
+			_inventory = new PlayerInventory();
+		}
+		
+
 		public void SetVehicle(PlayerVehicle vehicle)
 		{
-			//Debug.LogError("SetVehicle");
+			this.vehicle = vehicle;
 
-			_vehicle = vehicle;
+			//Initialize stuff
 			_input.Init(vehicle, Game.cam.GetCamera());
 
-			var pos = new Pos((int)_vehicle.transform.position.x,(int) _vehicle.transform.position.y); //TODO Pos conversion!
+			//Update map to get collision and fog of war
+			var pos = new Pos((int)vehicle.transform.position.x,(int) vehicle.transform.position.y); //TODO Pos conversion!
 			Game.map.UpdateMap(pos);
+		}
+
+		public void AddResouces(ResourceType type, int resourceCount)
+		{
+			_inventory.AddResources(type, resourceCount);
+			
+			//TODO Update GUI call, or make events?
 		}
 	}
 

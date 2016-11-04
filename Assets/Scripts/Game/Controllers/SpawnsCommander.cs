@@ -30,7 +30,7 @@ namespace Bolo.Net
 		#region Event callbacks
 		public void OnRequestPlayerVehicle(GameEventArgs args)
 		{
-			Debug.Log("OnRequestPlayerVehicle - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.localPlayer.connectionToClient);
+			Debug.Log("OnRequestPlayerVehicle - clientConn: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.client.connectionToClient);
 
 
 			CmdRequestSpawnPlayerVehicle();

@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 namespace Bolo
 {
+
 	public class SpawnPool<T> where T : NetworkSpawnable
 	{
 		private int _poolSize;
@@ -23,8 +24,9 @@ namespace Bolo
 			for (int i = 0; i < _poolSize; ++i)
 			{
 				var instance = (T)GameObject.Instantiate(_prefab, Vector3.zero, Quaternion.identity);
-				instance.name = "PoolObject" + i;
+				instance.name = typeof(T).ToString() + "_" + i;
 				instance.gameObject.SetActive(false);
+				instance.SetPool(this);
 				_pool.Push(instance);
 			}
         
@@ -37,7 +39,7 @@ namespace Bolo
 			var obj = _pool.Pop();
 			if (obj != null)
 			{
-				Debug.Log("Activating object " + obj.name);
+				//Debug.Log("Activating object " + obj.name);
 				//obj.transform.position = position;
 				obj.gameObject.SetActive(true);
 				return obj;
@@ -46,17 +48,26 @@ namespace Bolo
 			return null;
 		}
 
+		public void Destroy(T instance)
+		{
+			UnSpawn(instance.gameObject);
+			NetworkServer.UnSpawn(instance.gameObject);
+		}
 
 	    private GameObject Spawn(Vector3 position, NetworkHash128 assetId)
 		{
+			//Debug.Log("Spawn object");
+
 			var inst = GetInstance();
 			return inst ? inst.gameObject : null;
 		}
 
 		private void UnSpawn(GameObject spawned)
 		{
-			Debug.Log ("Re-pooling object " + spawned.name);
+			//Debug.Log("Re-pooling object " + spawned.name);
+
 			spawned.SetActive (false);
+			_pool.Push(spawned.GetComponent<T>());
 		}
 	}
 }

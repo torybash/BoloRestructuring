@@ -12,12 +12,10 @@ namespace Bolo
 
 		//Fields
 		[Header("Net player")]
-		[SerializeField] private NetPlayer _localPlayer;
+		[SerializeField] private NetPlayer _client;
 
 		[Header("Controllers")]
 		[SerializeField] private CameraController _cam;
-
-
 
 		[SerializeField] private GameUIController _ui;
 		[SerializeField] private PlayerController _player;
@@ -39,26 +37,27 @@ namespace Bolo
 
 		public static MapManager map { get { return I._map; } }
 		public static SpawnsManager spawns { get { return I._spawns; } }
-		//public static MapCommander map { get { return I._map; } }
-		//public static SpawnsCommander spawns { get { return I._spawns; } }
 
-		public static NetPlayer localPlayer { get { return I._localPlayer; } }
+		public static NetPlayer client { get { return I._client; } }
 
 		public static PrefabLibrary prefabsLib { get { return I._prefabsLib; } }
 
+
 		void Awake()
 		{
-			//Init stuff
+			//Init prefabs-library
 			prefabsLib.Init();
-			ui.Init();
 		}
 
 		public static void SetLocalPlayer(NetPlayer netPlayer)
 		{
 			//Set ref to network player
-			I._localPlayer = netPlayer;
+			I._client = netPlayer;
 
-			map.Setup();
+			//Init controllers
+			cam.Init();
+			ui.Init();
+			player.Init();
 		}
 	}
 }

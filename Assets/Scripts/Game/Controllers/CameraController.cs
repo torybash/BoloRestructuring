@@ -19,6 +19,7 @@ namespace Bolo
 
 		}
 
+		#region Lifecycle
 		void FixedUpdate()
 		{
 			//TODO Receive events, for focus etc.
@@ -33,10 +34,17 @@ namespace Bolo
 			}
 
 		}
+		#endregion Lifecycle
 
 		public Camera GetCamera()
 		{
 			return cam;
 		}
+
+		public void Init()
+		{
+			//TODO init camera parameters for client
+		}
+
 	}
 }

@@ -5,29 +5,26 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 // See the ReadMe.html for additional information
 public class ObjectDumper {
 
-    public static void Write(object element)
+    public static string Dump(object element)
     {
-        Write(element, 0);
+        return Dump(element, 0);
     }
 
-    public static void Write(object element, int depth)
-    {
-        Write(element, depth, Console.Out);
-    }
-
-    public static void Write(object element, int depth, TextWriter log)
+    public static string Dump(object element, int depth)
     {
         ObjectDumper dumper = new ObjectDumper(depth);
-        dumper.writer = log;
+		dumper.builder = new StringBuilder();
         dumper.WriteObject(null, element);
+		return dumper.builder.ToString();
     }
 
-    TextWriter writer;
-    int pos;
+	StringBuilder builder;
+	int pos;
     int level;
     int depth;
 
@@ -39,19 +36,19 @@ public class ObjectDumper {
     private void Write(string s)
     {
         if (s != null) {
-            writer.Write(s);
+            builder.Append(s);
             pos += s.Length;
         }
     }
 
     private void WriteIndent()
     {
-        for (int i = 0; i < level; i++) writer.Write("  ");
+        for (int i = 0; i < level; i++) builder.Append("  ");
     }
 
     private void WriteLine()
     {
-        writer.WriteLine();
+        builder.AppendLine();
         pos = 0;
     }
 
