@@ -49,7 +49,7 @@ namespace Bolo
 
 			//if (isLocalPlayer) return; //TODO?
 
-			Game.map.SendMapToClient(connectionToClient);
+			Game.Map.SendMapToClient(connectionToClient);
 		}
 		#endregion Lifecycle
 
@@ -84,7 +84,7 @@ namespace Bolo
 
 		private void OnPlayerMovedToTile(GameEventArgs args)
 		{
-			Game.map.PlayerMovedToTile(args);
+			Game.Map.PlayerMovedToTile(args);
 
 			//var movedArgs = (PlayerMovedToTileArgs) args;
 
@@ -101,7 +101,7 @@ namespace Bolo
 		[Command]
 		public void CmdDrillTileAt(Pos pos, float damage)
 		{
-			Game.map.DrillTileAt(pos, damage);
+			Game.Map.DrillTileAt(pos, damage);
 		}
 
 		#endregion Commands

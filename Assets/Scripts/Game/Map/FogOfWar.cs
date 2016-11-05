@@ -95,7 +95,7 @@ namespace Bolo.Map
 				tilesExplored[tilePos.x, tilePos.y] = 1;
 			}
 
-			var playerPos = Game.player.vehicle.transform.position; //TODO make reference to player somewhere better?
+			var playerPos = Game.Player.Vehicle.transform.position; //TODO make reference to player somewhere better?
 			UpdateFogMap(new Pos((int)playerPos.x, (int)playerPos.y), tilesExplored);
 		}
 

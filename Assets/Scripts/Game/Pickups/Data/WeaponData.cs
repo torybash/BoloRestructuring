@@ -8,6 +8,7 @@ namespace Bolo
 	[Serializable]
 	public class WeaponData
 	{
+		[Serializable]
 		public class WeaponUpgradeData
 		{
 			public PriceData price;
@@ -23,8 +24,10 @@ namespace Bolo
 			public float knockBack;
 		}
 
-		public WeaponType type; //For gfx + maybe scripts/behaviours?
-		public string title;
+		public string name;
+		public WeaponType type; //For references/commands + maybe scripts/behaviours?
+
+		public Sprite iconSprite;
 
 		public PriceData price;
 
@@ -33,9 +36,6 @@ namespace Bolo
 		public float accuracy;
 		public float ammoUse;
 		public float recoil;
-
-		//Upgrades
-		public WeaponUpgradeData[] upgrades;
 		
 		//Projectile stats
 		public float speed;
@@ -43,7 +43,8 @@ namespace Bolo
 		public float range;
 		public float knockBack;
 		
-
+		//Upgrades
+		public WeaponUpgradeData[] upgrades;
 
 		public static WeaponData DBGWeapon
 		{
@@ -54,7 +55,7 @@ namespace Bolo
 				weaponData.cooldownDuration = 0.2f;
 				weaponData.damage = 5f;
 				weaponData.range = 8f;
-				weaponData.title = "Cannon";
+				weaponData.name = "Cannon";
 				weaponData.speed = 4f;
 				weaponData.type = WeaponType.CANNON;
 				weaponData.knockBack = 10f;

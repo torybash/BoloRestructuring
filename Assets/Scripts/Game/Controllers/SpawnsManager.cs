@@ -24,7 +24,7 @@ namespace Bolo
 
 		public void ShootProjectile(Vector3 pos, Vector3 dir, WeaponData weapon, int connId)
 		{
-			Debug.Log("OnShootProjectile - connId: " + connId + ", connectionToClient: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.client.connectionToClient);
+			Debug.Log("OnShootProjectile - connId: " + connId + ", connectionToClient: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.Client.connectionToClient);
 
 			var clientConn = Host.GetConnectionFromId(connId);
 			if (clientConn != null)

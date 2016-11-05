@@ -2,9 +2,9 @@
 using System.Collections;
 using Bolo.DataClasses;
 using Bolo.Util;
-using Bolo.UI;
 using System;
 using Bolo.Events;
+using Bolo.Player;
 
 namespace Bolo
 {
@@ -14,6 +14,8 @@ namespace Bolo
 		[SerializeField]
 		private UIPanel _spawnPanel;
 
+		[SerializeField]
+		private UIPanel _vehiclePanel;
 
 		#region Setup
 		protected override void Listen()
@@ -29,9 +31,21 @@ namespace Bolo
 
 		public void Init()
 		{
-			_spawnPanel.Enable(true);
+			_spawnPanel.Enable(true); //TODO do from Editor?
+			_vehiclePanel.Enable(false);
 		}
 		#endregion
+
+
+		#region Lifecycle
+		void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				_vehiclePanel.Enable(!_vehiclePanel.IsEnabled);
+			}
+		}
+		#endregion Lifecycle
 
 		#region Event Handlers
 		private void OnRequestPlayerVehicle(GameEventArgs arg0)

@@ -28,25 +28,28 @@ namespace Bolo
 
 		[Header("Asset References")]
 		[SerializeField] private PrefabLibrary _prefabsLib;
+		[SerializeField] private WeaponLibrary _weaponsLib;
 
 
 		//Properties
-		public static CameraController cam { get { return I._cam; } }
-		public static GameUIController ui { get { return I._ui; } }
-		public static PlayerController player { get { return I._player; } }
+		public static CameraController Cam { get { return I._cam; } }
+		public static GameUIController Ui { get { return I._ui; } }
+		public static PlayerController Player { get { return I._player; } }
 
-		public static MapManager map { get { return I._map; } }
-		public static SpawnsManager spawns { get { return I._spawns; } }
+		public static MapManager Map { get { return I._map; } }
+		public static SpawnsManager Spawns { get { return I._spawns; } }
 
-		public static NetPlayer client { get { return I._client; } }
+		public static NetPlayer Client { get { return I._client; } }
 
-		public static PrefabLibrary prefabsLib { get { return I._prefabsLib; } }
+		public static PrefabLibrary PrefabsLib { get { return I._prefabsLib; } }
+		public static WeaponLibrary WeaponsLib { get { return I._weaponsLib; } }
 
 
 		void Awake()
 		{
 			//Init prefabs-library
-			prefabsLib.Init();
+			PrefabsLib.Init();
+			WeaponsLib.Init();
 		}
 
 		public static void SetLocalPlayer(NetPlayer netPlayer)
@@ -55,9 +58,9 @@ namespace Bolo
 			I._client = netPlayer;
 
 			//Init controllers
-			cam.Init();
-			ui.Init();
-			player.Init();
+			Cam.Init();
+			Ui.Init();
+			Player.Init();
 		}
 	}
 }

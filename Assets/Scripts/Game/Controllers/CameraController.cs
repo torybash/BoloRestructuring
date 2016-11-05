@@ -26,9 +26,9 @@ namespace Bolo
 			//TODO Follow on transform/player
 			//TODO Player movement of object?
 
-			if (Game.player.vehicle)
+			if (Game.Player.Vehicle)
 			{
-				var newCamPos = Game.player.vehicle.transform.position;
+				var newCamPos = Game.Player.Vehicle.transform.position;
 				newCamPos.z = cam.transform.position.z;
 				cam.transform.position = newCamPos;
 			}

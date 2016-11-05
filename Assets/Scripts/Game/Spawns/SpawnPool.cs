@@ -12,6 +12,8 @@ namespace Bolo
 		private T _prefab;
 		private Stack<T> _pool;
 
+		private Transform _container;
+
 		public NetworkHash128 assetId { get; set; }
 
 		public SpawnPool(T prefab, int poolSize)
@@ -21,12 +23,15 @@ namespace Bolo
 
 			assetId = _prefab.GetComponent<NetworkIdentity> ().assetId;
 			_pool = new Stack<T>(_poolSize);
+			_container = new GameObject(typeof(T).ToString() + "_Pool").transform;
+			//_container.SetParent(parent);
 			for (int i = 0; i < _poolSize; ++i)
 			{
 				var instance = (T)GameObject.Instantiate(_prefab, Vector3.zero, Quaternion.identity);
 				instance.name = typeof(T).ToString() + "_" + i;
 				instance.gameObject.SetActive(false);
 				instance.SetPool(this);
+				instance.transform.SetParent(_container);
 				_pool.Push(instance);
 			}
         

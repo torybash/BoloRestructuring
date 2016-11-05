@@ -12,18 +12,19 @@ namespace Bolo
 
 		private PlayerInventory _inventory;
 
-		public PlayerVehicle vehicle { get; private set; }
+		public PlayerVehicle Vehicle { get; private set; }
+		public PlayerInventory Inventory { get { return _inventory; } }
 
 
 		#region Lifecycle
 		void Update()
 		{
-			if (vehicle) _input.HandleInput();
+			if (Vehicle) _input.HandleInput();
 		}
 
 		void FixedUpdate()
 		{
-			if (vehicle) _input.ApplyInput();
+			if (Vehicle) _input.ApplyInput();
 		}
 		#endregion Lifecycle
 
@@ -36,21 +37,28 @@ namespace Bolo
 
 		public void SetVehicle(PlayerVehicle vehicle)
 		{
-			this.vehicle = vehicle;
+			this.Vehicle = vehicle;
 
 			//Initialize stuff
-			_input.Init(vehicle, Game.cam.GetCamera());
+			_input.Init(vehicle, Game.Cam.GetCamera());
 
 			//Update map to get collision and fog of war
 			var pos = new Pos((int)vehicle.transform.position.x,(int) vehicle.transform.position.y); //TODO Pos conversion!
-			Game.map.UpdateMap(pos);
+			Game.Map.UpdateMap(pos);
 		}
 
-		public void AddResouces(ResourceType type, int resourceCount)
+		public void AddResources(ResourceType type, int resourceCount)
 		{
 			_inventory.AddResources(type, resourceCount);
 			
 			//TODO Update GUI call, or make events?
+		}
+
+		public void ChangeOutfitSlot(OutfitData outfit, OutfitData.OutfitPlacement placement, int positionIdx)
+		{
+			Inventory.ChangeOutfitSlot(outfit, placement, positionIdx);
+
+			Vehicle.UpdateOutfit();
 		}
 	}
 

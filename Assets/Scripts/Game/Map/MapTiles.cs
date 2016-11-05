@@ -61,7 +61,7 @@ namespace Bolo.Map
 			{
 				for (int y = 0; y < chunkAmount; y++)
 				{
-					var chunkObj = Game.prefabsLib.Create("MapChunk");
+					var chunkObj = Game.PrefabsLib.Create("MapChunk");
 					chunkObj.transform.SetParent(transform, false);
 					chunkObj.GetComponent<MapChunk>().GenerateChunk(graphicsGroundChunks[x, y], graphicsBlockChunks[x, y], x * mapInfo.chunkSize, y * mapInfo.chunkSize, mapInfo.chunkSize);
 					_mapChunks[x, y] = chunkObj.GetComponent<MapChunk>();

@@ -55,15 +55,12 @@ namespace Bolo.DataClasses
 	[Serializable]
 	public enum WeaponType
 	{
+		NONE,
 		CANNON,
 		LASER,
-	}
-
-	[Serializable]
-	public enum WeaponSlotType
-	{
-		PRIMARY,
-		SECONDARY,
+		PLASMA,
+		ROCKET,
+		MISSILES
 	}
 
 	[Serializable]

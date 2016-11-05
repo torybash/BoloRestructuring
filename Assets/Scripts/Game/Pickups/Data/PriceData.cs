@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Bolo
 {
+	[Serializable]
 	public class PriceData
 	{
 		public int metal;

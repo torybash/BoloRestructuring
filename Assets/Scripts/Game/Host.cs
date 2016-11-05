@@ -33,7 +33,7 @@ namespace Bolo
 			_players = new List<NetPlayer>();
 
 			//Create map
-			Game.map.GenerateAndCreateMap();
+			Game.Map.GenerateAndCreateMap();
 		}
 
 		public static void AddPlayer(NetPlayer netPlayer)

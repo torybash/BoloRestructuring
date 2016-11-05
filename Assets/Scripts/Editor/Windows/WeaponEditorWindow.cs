@@ -42,7 +42,7 @@ namespace Bolo.EditorExt
 		private void LoadLibrary()
 		{
 			_library = WeaponLibrary.libObject;
-			_weapons = WeaponLibrary.GetWeapons();
+			_weapons = WeaponLibrary.Weapons;
 		}
 
 		void OnGUI()
@@ -79,7 +79,7 @@ namespace Bolo.EditorExt
 
 			cont = new GUIContent("Name", "Name of weapon");
 			EditorGUI.LabelField(new Rect(startX, startY, cWidth, cHeight), cont, EditorStyles.boldLabel);
-			weapon.title = EditorGUI.TextField(new Rect(startX + cSpaceX, startY, cWidth, cHeight), weapon.title);
+			weapon.name = EditorGUI.TextField(new Rect(startX + cSpaceX, startY, cWidth, cHeight), weapon.name);
 
 			cont = new GUIContent("Cooldown", "How often the weapon is able to shoot");
 			EditorGUI.LabelField(new Rect(startX, startY += cSpaceY, cWidth, cHeight), cont);

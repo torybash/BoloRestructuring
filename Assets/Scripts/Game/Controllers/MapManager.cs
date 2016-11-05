@@ -104,7 +104,7 @@ namespace Bolo
 				RpcChangeTileAt(cmd);
 
 				//TODO Spawn pickups!
-				Game.spawns.SpawnResources(new Vector2(pos.x, pos.y) + Vector2.one * 0.5f, result.pickups); //TODO Pos conversion! DO IT!
+				Game.Spawns.SpawnResources(new Vector2(pos.x, pos.y) + Vector2.one * 0.5f, result.pickups); //TODO Pos conversion! DO IT!
 			}
 			RpcDrillEffectAt(pos);
 		}
@@ -122,7 +122,7 @@ namespace Bolo
 		public void RpcChangeTileAt(ChangeBlockCommand cmd)
 		{
 			_tileMap.ChangeTileAt(cmd);
-			var playerPos = new Pos((int)Game.player.vehicle.transform.position.x, (int)Game.player.vehicle.transform.position.y); //TODO! convert pos, nullchecks!!!
+			var playerPos = new Pos((int)Game.Player.Vehicle.transform.position.x, (int)Game.Player.Vehicle.transform.position.y); //TODO! convert pos, nullchecks!!!
 			_fog.UpdateFog(playerPos);
 			_mapCollision.UpdateCollisionInArea(playerPos);
 		}

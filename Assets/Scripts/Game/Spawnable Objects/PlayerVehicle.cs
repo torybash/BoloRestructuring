@@ -22,8 +22,7 @@ namespace Bolo
 		public float drillLength = 0.5f;
 		public float drillCooldown = 0.2f;
 
-		public WeaponData primaryWeapon;
-		public WeaponData secondaryWeapon;
+
 
 		//Variables
 		private float _hp;
@@ -41,7 +40,7 @@ namespace Bolo
 		#endregion Fields
 
 
-		#region Property
+		#region Properties
 		public Vector2 bodyVec {
 			get
 			{
@@ -64,7 +63,10 @@ namespace Bolo
 				return _cannonDirection;
 			}
 		}
-		#endregion Property
+
+		private WeaponData _PrimaryWeapon { get; set; }
+		private WeaponData _SecondaryWeapon { get; set; }
+		#endregion Properties
 
 
 		#region Client
@@ -72,18 +74,20 @@ namespace Bolo
 		{
 			base.OnStartAuthority();
 
-			primaryWeapon = new WeaponData(); //TODO!!!!!!!!!!!!!
-			primaryWeapon.accuracy = 0;
-			primaryWeapon.cooldownDuration = 0.2f;
-			primaryWeapon.damage = 5f;
-			primaryWeapon.range = 8f;
-			primaryWeapon.title = "Cannon";
-			primaryWeapon.speed = 4f;
-			primaryWeapon.type = WeaponType.CANNON;
+			Game.Player.SetVehicle(this);
 
-			Game.player.SetVehicle(this);
+			UpdateOutfit();
 		}
 
+		public void UpdateOutfit()
+		{
+			//Set vehicle weapons
+			var weapon = Game.Player.Inventory.GetPrimaryWeapon();
+			if (weapon != WeaponType.NONE) _PrimaryWeapon = Game.WeaponsLib.GetWeaponData(weapon);
+
+			weapon = Game.Player.Inventory.GetSecondaryWeapon();
+			if (weapon != WeaponType.NONE) _SecondaryWeapon = Game.WeaponsLib.GetWeaponData(weapon);
+		}
 
 		public Vector3 ApplyMovement(Vector2 moveVec)
 		{
@@ -119,7 +123,7 @@ namespace Bolo
 				damage = drillDamage
 			};
 
-			CmdDrillingTileAt(drillCmd, Game.client.playerControllerId);
+			CmdDrillingTileAt(drillCmd, Game.Client.playerControllerId);
 		}
 
 
@@ -133,7 +137,7 @@ namespace Bolo
 		public void Shooting(bool shooting)
 		{
 			if (!shooting || Time.time < _nextShotTime) return;
-			_nextShotTime = Time.time + primaryWeapon.cooldownDuration;
+			_nextShotTime = Time.time + _PrimaryWeapon.cooldownDuration;
 
 			//Fire a bit in front of position
 			var shootPos = transform.position;
@@ -143,11 +147,11 @@ namespace Bolo
 			//Create and send command
 			var shootCmd = new ShootProjectileCommand
 			{
-				type = primaryWeapon.type, //TODO make right-click to secondary shot
+				type = _PrimaryWeapon.type, //TODO make right-click to secondary shot
 				pos = transform.position,
 				dir = _cannonDirection
 			};
-			CmdShooting(shootCmd, Game.client.connectionToServer.connectionId); //TODO, send more shot data, send weapon id!
+			CmdShooting(shootCmd, Game.Client.connectionToServer.connectionId); //TODO, send more shot data, send weapon id!
 		}
 		#endregion Client
 
@@ -158,15 +162,14 @@ namespace Bolo
 		{
 			//Debug.Log("CmdDrillingTileAt - drillPos: " + cmd.pos + ", drillDmg: " + cmd.damage + ", client conn: " + connectionToClient);
 
-			Game.map.DrillTileAt(cmd.pos, cmd.damage);
+			Game.Map.DrillTileAt(cmd.pos, cmd.damage);
 		}
 		
 		[Command]
 		private void CmdShooting(ShootProjectileCommand cmd, int connId)
 		{
-			//TODO get weapon that is shooting, create weapon stats to pass on
-			var weapon = WeaponData.DBGWeapon;
-			Game.spawns.ShootProjectile(cmd.pos, cmd.dir, weapon, connId);
+			var weapon = Game.WeaponsLib.GetWeaponData(cmd.type);
+			Game.Spawns.ShootProjectile(cmd.pos, cmd.dir, weapon, connId);
 		}
 
 		[Command]
@@ -181,7 +184,7 @@ namespace Bolo
 		[Command]
 		public void CmdPickUpResource(ResourceType type, int resourceCount)
 		{
-			Game.player.AddResouces(type, resourceCount);
+			Game.Player.AddResources(type, resourceCount);
 		}
 		#endregion Server
 	}

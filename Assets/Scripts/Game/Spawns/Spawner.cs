@@ -50,7 +50,7 @@ namespace Bolo.Spawns
 		public GameObject GetPlayerVehicleInstance()
 		{
 			var playerPositions = GetAllPlayerPositions();
-			var spawnPos = Game.map.GetNewSpawnPosition(playerPositions);
+			var spawnPos = Game.Map.GetNewSpawnPosition(playerPositions);
 			var vehicleInstance = netPrefabs.Create("PlayerVehicle");
 
 			vehicleInstance.transform.position = spawnPos + 0.5f * Vector2.one; //TODO make tile position helper

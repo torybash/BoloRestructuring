@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Bolo;
-using Bolo.Util;
 using Bolo.Events;
 
-namespace Bolo.UI
+namespace Bolo.Player
 {
 	public class SpawnPanel : UIPanel
 	{

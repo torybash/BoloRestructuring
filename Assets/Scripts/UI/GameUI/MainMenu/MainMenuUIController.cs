@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 
-namespace Bolo.UI
+namespace Bolo
 {
 	public class MainMenuUIController : MonoBehaviour
 	{

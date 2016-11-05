@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using Bolo.DataClasses;
+using System;
 
 namespace Bolo.Util
 {
@@ -12,11 +13,24 @@ namespace Bolo.Util
 		private List<WeaponData> _weapons;
 
 		
-		public static List<WeaponData> GetWeapons()
+		public static List<WeaponData> Weapons
 		{
-			return libObject._weapons;
+			get
+			{
+				return libObject._weapons;
+			}
 		}
 
+		public void Init()
+		{
+			//TODO Init stuff?
+		}
+
+		public WeaponData GetWeaponData(WeaponType type)
+		{
+			var weaponData = _weapons.First(x => x.type == type);
+			return weaponData;
+		}
 	}
 
 }
