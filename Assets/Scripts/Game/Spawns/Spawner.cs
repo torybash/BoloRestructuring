@@ -53,10 +53,9 @@ namespace Bolo.Spawns
 			var spawnPos = Game.Map.GetNewSpawnPosition(playerPositions);
 			var vehicleInstance = netPrefabs.Create("PlayerVehicle");
 
-			vehicleInstance.transform.position = spawnPos + 0.5f * Vector2.one; //TODO make tile position helper
+			vehicleInstance.transform.position = spawnPos;
 			if (vehicleInstance)
 			{
-				//var localConn = Game.localPlayer.connectionToClient;
 				_spawnableList.Add(vehicleInstance.GetComponent<NetworkSpawnable>());
 			}
 

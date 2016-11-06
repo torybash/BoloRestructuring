@@ -8,7 +8,7 @@ namespace Bolo.Map
 	[Serializable]
 	public class MapGenerator
 	{
-		private const int cChunkSize = 64;
+		private const int cChunkSize = 32;
 
 		#region MapInfo
 		public MapInfo GetRandomMapInfo(int seed, int mapSize)

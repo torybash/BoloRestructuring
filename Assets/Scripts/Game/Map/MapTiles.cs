@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using Bolo.Util;
 using System;
 using Random = UnityEngine.Random;
 using Bolo.DataClasses;
@@ -61,7 +59,7 @@ namespace Bolo.Map
 			{
 				for (int y = 0; y < chunkAmount; y++)
 				{
-					var chunkObj = Game.PrefabsLib.Create("MapChunk");
+					var chunkObj = PrefabLibrary.Create("MapChunk");
 					chunkObj.transform.SetParent(transform, false);
 					chunkObj.GetComponent<MapChunk>().GenerateChunk(graphicsGroundChunks[x, y], graphicsBlockChunks[x, y], x * mapInfo.chunkSize, y * mapInfo.chunkSize, mapInfo.chunkSize);
 					_mapChunks[x, y] = chunkObj.GetComponent<MapChunk>();
@@ -75,8 +73,8 @@ namespace Bolo.Map
 		{
 			//TODO use playerPositions!
 			//TODO prevent spawn on block (or remove block on spawn)
-			var rndPos = new Vector2(Random.Range(1, mapInfo.size-1), Random.Range(1, mapInfo.size-1));
-			return rndPos;
+			var rndPos = new Pos(Random.Range(1, mapInfo.size-1), Random.Range(1, mapInfo.size-1));
+			return MapHelper.PosToWorld(rndPos);
 		}
 
 		public void UpdateChunks()

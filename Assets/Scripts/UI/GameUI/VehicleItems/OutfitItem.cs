@@ -8,7 +8,7 @@ namespace Bolo.Player
 {
 	public class OutfitItem : MonoBehaviour
 	{
-		//TODO inherited classes for weapon/armour etc?
+		//TODO inherited classes for weapon/armour etc? Types at least?
 		[SerializeField]
 		private Text nameTxt;
 		[SerializeField]
@@ -38,15 +38,14 @@ namespace Bolo.Player
 			var weaponData = outfit as WeaponOutfitData;
 			if (weaponData != null)
 			{
-				nameTxt.text = Game.WeaponsLib.GetWeaponData(weaponData.weaponType).name;
-				iconImg.sprite = Game.WeaponsLib.GetWeaponData(weaponData.weaponType).iconSprite;
+				nameTxt.text = WeaponLibrary.GetWeaponData(weaponData.weaponType).name;
+				iconImg.sprite = WeaponLibrary.GetWeaponData(weaponData.weaponType).iconSprite;
 			}
 		}
 
 		public void OnStartDrag(BaseEventData data)
 		{
 			Debug.Log("OnStartDrag - data.selectedObject: " + data.selectedObject);
-			//Debug.Log("pointerData - pressPosition: " + pointerData.pressPosition);
 
 			_Panel.DragOutfit(this, (PointerEventData)data);
 		}

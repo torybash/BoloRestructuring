@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections.Generic;
-using Bolo.Util;
-using UnityEngine.Events;
 
 namespace Bolo.DataClasses
 {

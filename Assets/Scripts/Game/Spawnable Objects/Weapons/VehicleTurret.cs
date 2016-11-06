@@ -7,8 +7,6 @@ namespace Bolo
 {
 	public class VehicleTurret : MonoBehaviour {
 
-		public WeaponData turretData;
-
 
 		public void Init()
 		{

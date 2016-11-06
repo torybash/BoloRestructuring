@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Bolo.Events;
+using Bolo.DataClasses;
 
 namespace Bolo.Player
 {
@@ -30,7 +31,8 @@ namespace Bolo.Player
 
 			_input.mousePosition = _cam.ScreenToWorldPoint(Input.mousePosition);
 
-			_input.shooting = Input.GetMouseButton(0);
+			_input.primaryShoot = Input.GetMouseButton(0);
+			_input.secondaryShoot = Input.GetMouseButton(1);
 		}
 
 		public void ApplyInput()
@@ -68,7 +70,8 @@ namespace Bolo.Player
 		{
 			//TODO, other stuff than shooting!?
 			_vehicle.SetDirection(_input.mousePosition);
-			_vehicle.Shooting(_input.shooting);
+			if (_input.primaryShoot) _vehicle.Shooting(WeaponPositionType.PRIMARY);
+			if (_input.secondaryShoot) _vehicle.Shooting(WeaponPositionType.SECONDARY);
 		}
 	 
 	}

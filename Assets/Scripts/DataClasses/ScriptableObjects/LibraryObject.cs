@@ -7,7 +7,7 @@ namespace Bolo.DataClasses
 	public abstract class LibraryObject<T> : ScriptableObject where T : ScriptableObject
 	{
 		private static T s_libObject;
-		public static T libObject
+		public static T sLibObject
 		{
 			get
 			{

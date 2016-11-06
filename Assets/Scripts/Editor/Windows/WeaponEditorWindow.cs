@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
-using Bolo.Util;
 using System;
 using System.Collections.Generic;
 
@@ -41,7 +39,7 @@ namespace Bolo.EditorExt
 
 		private void LoadLibrary()
 		{
-			_library = WeaponLibrary.libObject;
+			_library = WeaponLibrary.sLibObject;
 			_weapons = WeaponLibrary.Weapons;
 		}
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-namespace Bolo.Util
+namespace Bolo
 {
 	public static class ArrayExtensions
 	{

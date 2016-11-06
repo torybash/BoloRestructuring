@@ -2,6 +2,7 @@
 using Bolo.DataClasses;
 using Bolo.Player;
 using System;
+using Bolo.Map;
 
 namespace Bolo
 {
@@ -37,13 +38,13 @@ namespace Bolo
 
 		public void SetVehicle(PlayerVehicle vehicle)
 		{
-			this.Vehicle = vehicle;
+			Vehicle = vehicle;
 
 			//Initialize stuff
 			_input.Init(vehicle, Game.Cam.GetCamera());
 
 			//Update map to get collision and fog of war
-			var pos = new Pos((int)vehicle.transform.position.x,(int) vehicle.transform.position.y); //TODO Pos conversion!
+			var pos = MapHelper.WorldToPos(vehicle.transform.position);
 			Game.Map.UpdateMap(pos);
 		}
 

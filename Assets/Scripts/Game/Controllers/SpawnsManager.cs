@@ -9,8 +9,6 @@ namespace Bolo
 {
 	public class SpawnsManager : NetworkBehaviour
 	{
-		public GameObject bulletPrefab; //TODO <---REMOVE, use prefab library
-
 		[SerializeField]
 		private Spawner _spawner;
 
@@ -24,7 +22,7 @@ namespace Bolo
 
 		public void ShootProjectile(Vector3 pos, Vector3 dir, WeaponData weapon, int connId)
 		{
-			Debug.Log("OnShootProjectile - connId: " + connId + ", connectionToClient: " + connectionToClient + ", Game.localPlayer.connectionToClient: " + Game.Client.connectionToClient);
+			//Debug.Log("OnShootProjectile - weapon: "+ weapon.name + ", projectile: " + weapon.projectileSprite);
 
 			var clientConn = Host.GetConnectionFromId(connId);
 			if (clientConn != null)
@@ -32,6 +30,9 @@ namespace Bolo
 				var hash = default(NetworkHash128);
 				var projectileInst = _spawner.GetProjectileInstance(out hash);
 				projectileInst.Init(pos, dir, weapon, clientConn);
+
+				float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+				projectileInst.transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
 
 				NetworkServer.Spawn(projectileInst.gameObject, hash);
 			}

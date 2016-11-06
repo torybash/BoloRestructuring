@@ -22,10 +22,7 @@ namespace Bolo
 		#region Lifecycle
 		void FixedUpdate()
 		{
-			//TODO Receive events, for focus etc.
-			//TODO Follow on transform/player
-			//TODO Player movement of object?
-
+			//TODO Receive events, for focus etc., Player movement of object?
 			if (Game.Player.Vehicle)
 			{
 				var newCamPos = Game.Player.Vehicle.transform.position;

@@ -10,6 +10,7 @@ namespace Bolo.Player
 		public bool useAction;
 
 		public Vector2 mousePosition;
-		public bool shooting;
+		public bool primaryShoot;
+		public bool secondaryShoot;
 	}
 }

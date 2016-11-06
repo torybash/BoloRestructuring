@@ -1,6 +1,5 @@
 ﻿using Bolo.DataClasses;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Bolo.Player
@@ -29,13 +28,13 @@ namespace Bolo.Player
 	}
 
 	[Serializable]
-	public class DrillOutfitData : OutfitData //TODO
+	public class DrillOutfitData : OutfitData //TODO DrillOutfitData
 	{
 		//public WeaponType weaponType;
 	}
 
 	[Serializable]
-	public class ArmourOutfitData : OutfitData //TODO
+	public class ArmourOutfitData : OutfitData //TODO ArmourOutfitData
 	{
 		//public WeaponType weaponType;
 	}

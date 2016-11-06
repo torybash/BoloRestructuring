@@ -27,8 +27,11 @@ namespace Bolo
 		public string name;
 		public WeaponType type; //For references/commands + maybe scripts/behaviours?
 
+		//Graphics
 		public Sprite iconSprite;
+		public Sprite projectileSprite;
 
+		//Price
 		public PriceData price;
 
 		//Weapon stats
@@ -45,6 +48,7 @@ namespace Bolo
 		
 		//Upgrades
 		public WeaponUpgradeData[] upgrades;
+		
 
 		public static WeaponData DBGWeapon
 		{

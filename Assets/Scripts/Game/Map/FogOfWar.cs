@@ -85,7 +85,7 @@ namespace Bolo.Map
 
 			UpdateMesh();
 
-			transform.position = new Vector3(startFogPos.x + 0.5f, startFogPos.y + 0.5f, -4f); //TODO Convert tile pos, create constant
+			transform.position = MapHelper.PosToWorld(startFogPos, -4f); //TODO Convert tile pos, create constant
 		}
 	
 		private IEnumerator _RemoveFromVisibility(List<Pos> missingList){

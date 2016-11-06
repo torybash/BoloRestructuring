@@ -1,12 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Bolo;
-using Bolo.Util;
-using Bolo.Events;
 using UnityEngine.EventSystems;
 using System;
-using Bolo.DataClasses;
 
 namespace Bolo.Player
 {
@@ -74,7 +70,7 @@ namespace Bolo.Player
 				var outfitInst = Instantiate(_outfitItemTemplate);
 				outfitInst.gameObject.SetActive(true);
 
-				SetItemParent(outfitInst, slot.transform);
+				SetOutfitParent(outfitInst, slot.transform);
 
 				outfitInst.Init(this, slot, outfit);
 				_outfitItems.Add(outfitInst);
@@ -134,11 +130,11 @@ namespace Bolo.Player
 
 				//Update UI 
 				outfitItem.Slot = slot;
-				SetItemParent(outfitItem, slot.transform);
+				SetOutfitParent(outfitItem, slot.transform);
 			}
 			else
 			{
-				SetItemParent(outfitItem, outfitItem.Slot.transform);
+				SetOutfitParent(outfitItem, outfitItem.Slot.transform);
 			}
 
 			outfitItem.GetComponent<CanvasGroup>().blocksRaycasts = true;			
@@ -148,7 +144,7 @@ namespace Bolo.Player
 		#region Coroutines
 		private IEnumerator _DoDragOutfit(OutfitItem outfitItem)
 		{
-			SetItemParent(outfitItem, transform);
+			SetOutfitParent(outfitItem, transform);
 	
 			while (_isDragging)
 			{
@@ -161,15 +157,12 @@ namespace Bolo.Player
 		#endregion Coroutines
 
 
-		//TODO Move to Helper class?
 		#region Helpers 
-		private void SetItemParent(OutfitItem outfitItem, Transform parent)
+		private void SetOutfitParent(OutfitItem outfitItem, Transform parent)
 		{
 			outfitItem.transform.SetParent(parent, false);
 			outfitItem.transform.localScale = Vector2.one;
 			outfitItem.transform.localPosition = Vector2.one;
-			//outfitItem.GetComponent<RectTransform>().offsetMax = Vector2.zero;
-			//outfitItem.GetComponent<RectTransform>().offsetMin = Vector2.zero;
 		}
 		#endregion Helpers
 	}

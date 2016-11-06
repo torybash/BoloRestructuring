@@ -1,57 +1,24 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using Bolo.DataClasses;
-using System.Collections.Generic;
-using Random = UnityEngine.Random;
-using System;
-using Bolo.Map;
-using Bolo.Util;
 using Bolo.Events;
 
 namespace Bolo
 {
 	public class MapCommander : CommanderBehaviour
 	{
-		//[SerializeField]
-		//private MapTiles _tileMap;
-
-		//[SerializeField]
-		//private FogOfWar _fog;
-
-		//[SerializeField]
-		//private MapCollision _mapCollision;
-
-
 
 		#region Lifecycle
-		public override void OnStartAuthority()
-		{
-						//Debug.LogError("OnStartAuthority - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
-
-			base.OnStartAuthority();
-		}
-		public override void OnStartClient()
-		{
-						//Debug.LogError("OnStartClient - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
-
-			base.OnStartClient();
-		}
-		public override void OnStartLocalPlayer()
-		{
-						//Debug.LogError("OnStartLocalPlayer - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
-
-			base.OnStartLocalPlayer();
-		}
 		public override void OnStartServer()
 		{
 			//Debug.LogError("OnStartServer - isServer: " + isServer + ", isLocalPlayer: "+ isLocalPlayer + ", connectionToClient: "+ connectionToClient);
 			base.OnStartServer();
 
-			//if (isLocalPlayer) return; //TODO?
-
-			Game.Map.SendMapToClient(connectionToClient);
+			if (!NetworkClient.active) //Dont send if host's commander
+				Game.Map.SendMapToClient(connectionToClient);
 		}
 		#endregion Lifecycle
+
 
 		#region Setup
 		protected override void Listen()
@@ -68,11 +35,6 @@ namespace Bolo
 		#endregion
 
 
-
-
-
-
-
 		#region Event callbacks
 		private void OnDrillTileAt(GameEventArgs args)
 		{
@@ -80,7 +42,6 @@ namespace Bolo
 
 			CmdDrillTileAt(drillArgs.pos, drillArgs.damage);
 		}
-
 
 		private void OnPlayerMovedToTile(GameEventArgs args)
 		{
@@ -94,8 +55,6 @@ namespace Bolo
 		}
 		#endregion Event callbacks
 
-
-
 		
 		#region Commands
 		[Command]
@@ -103,7 +62,6 @@ namespace Bolo
 		{
 			Game.Map.DrillTileAt(pos, damage);
 		}
-
 		#endregion Commands
 	}
 }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Bolo.DataClasses;
 
-namespace Bolo.Util
+namespace Bolo
 {
 	[CreateAssetMenu(fileName = "PrefabLibrary", menuName = "Bolo/ScriptableObjects/PrefabLibrary", order = 1)]
 	public class PrefabLibrary : LibraryObject<PrefabLibrary>
@@ -16,22 +16,24 @@ namespace Bolo.Util
 		private Dictionary<string, GameObject> _prefabNameDict;
 
 
-		public void Init()
+		#region Lifecycle
+		void OnEnable()
 		{
 			_prefabTypeDict = new Dictionary<Type, GameObject>();
 			_prefabNameDict = new Dictionary<string, GameObject>();
 			foreach (var item in _prefabList)
 			{
-				_prefabTypeDict.Add(item.GetType(), item);      //TODO, use custom key-prefab list instead
-				_prefabNameDict.Add(item.name, item);      //TODO, use custom key-prefab list instead
+				_prefabTypeDict.Add(item.GetType(), item); 
+				_prefabNameDict.Add(item.name, item); 
 			}
 		}
+		#endregion Lifecycle
 
 
-		public GameObject Create(string name)
+		public static GameObject Create(string name)
 		{
 			GameObject prefab = null;
-			if (!_prefabNameDict.TryGetValue(name, out prefab))
+			if (!sLibObject._prefabNameDict.TryGetValue(name, out prefab))
 			{
 				Debug.LogError("Prefab of name " + name + " does not exists!");
 				return null;
@@ -40,10 +42,10 @@ namespace Bolo.Util
 			return instance;
 		}
 
-		public GameObject Create(Type type)
+		public static GameObject Create(Type type)
 		{
 			GameObject prefab = null;
-			if (!_prefabTypeDict.TryGetValue(type, out prefab))
+			if (!sLibObject._prefabTypeDict.TryGetValue(type, out prefab))
 			{
 				Debug.LogError("Prefab of type " + type + " does not exists!");
 				return null;

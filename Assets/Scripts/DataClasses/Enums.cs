@@ -64,6 +64,13 @@ namespace Bolo.DataClasses
 	}
 
 	[Serializable]
+	public enum WeaponPositionType
+	{
+		PRIMARY,
+		SECONDARY
+	}
+
+	[Serializable]
 	public enum ResourceType
 	{
 		EMPTY,

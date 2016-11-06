@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Bolo.Util;
 using Bolo.Net;
 using Bolo.DataClasses;
 using System;
@@ -9,8 +8,6 @@ namespace Bolo
 {
 	public class Game : SingletonBehaviour<Game>
 	{
-
-		//Fields
 		[Header("Net player")]
 		[SerializeField] private NetPlayer _client;
 
@@ -23,12 +20,6 @@ namespace Bolo
 		[Header("Commanders")]
 		[SerializeField] private MapManager _map;
 		[SerializeField] private SpawnsManager _spawns;
-		//[SerializeField] private MapCommander _map;
-		//[SerializeField] private SpawnsCommander _spawns;
-
-		[Header("Asset References")]
-		[SerializeField] private PrefabLibrary _prefabsLib;
-		[SerializeField] private WeaponLibrary _weaponsLib;
 
 
 		//Properties
@@ -41,16 +32,6 @@ namespace Bolo
 
 		public static NetPlayer Client { get { return I._client; } }
 
-		public static PrefabLibrary PrefabsLib { get { return I._prefabsLib; } }
-		public static WeaponLibrary WeaponsLib { get { return I._weaponsLib; } }
-
-
-		void Awake()
-		{
-			//Init prefabs-library
-			PrefabsLib.Init();
-			WeaponsLib.Init();
-		}
 
 		public static void SetLocalPlayer(NetPlayer netPlayer)
 		{
